@@ -18,7 +18,7 @@ async function activeTab() {
 async function captureVisible() {
   if (!$('authorize').checked) throw new Error('Coche la confirmation d’autorisation avant toute capture.');
   const tab = await activeTab();
-  await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['src/content/collector-content.js'] });
+  await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['src/content/teams-dom-shapes.js', 'src/content/collector-content.js'] });
   const response = await chrome.tabs.sendMessage(tab.id, { type: 'COLLECT_VISIBLE_TEAMS' });
   if (!response?.ok) throw new Error(response?.error || 'La capture Teams a échoué.');
   const confirmedKey = response.channel || 'unknown-channel';

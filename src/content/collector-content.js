@@ -4,7 +4,8 @@
   globalThis.__teamsChannelArchiveInstalled = true;
 
   function text(node) { return node?.textContent?.replace(/\s+/g, ' ').trim() || null; }
-  function candidateNodes() { return [...document.querySelectorAll('[data-message-id],[data-tid*="message"],[role="article"]')]; }
+  const dom = globalThis.TeamsArchiveDom;
+  function candidateNodes() { return dom ? [...document.querySelectorAll(dom.messageSelector())] : []; }
   function channelLabel() {
     const heading = document.querySelector('h1,[role="heading"][aria-level="1"],header [data-tid*="channel"]');
     return text(heading) || document.title || null;
@@ -12,11 +13,13 @@
   function collectVisible() {
     const label = channelLabel();
     const records = candidateNodes().map((node, index) => {
-      const id = node.getAttribute('data-message-id') || node.id || null;
-      const authorNode = node.querySelector('[data-tid*="author"],[data-tid*="sender"],[aria-label*="Author"]');
-      const timeNode = node.querySelector('time,[data-tid*="timestamp"]');
+      const id = dom?.messageId(node) || null;
+      const authorNode = node.querySelector('[data-tid="message-author-name"],[data-tid*="author"],[aria-label*="Author"]');
+      const timeNode = node.querySelector('time[datetime],time,[data-tid*="timestamp"]');
+      const rawTimestamp = timeNode?.getAttribute('datetime') || text(timeNode);
+      const createdAt = dom?.normalizeTeamsTimestamp(rawTimestamp) || rawTimestamp || null;
       const replyToId = node.getAttribute('data-reply-to-id') || null;
-      return { id, channelKey: label || 'unknown-channel', replyToId, author: text(authorNode), createdAt: timeNode?.getAttribute('datetime') || text(timeNode), html: node.innerHTML, domIndex: index };
+      return { id, channelKey: label || 'unknown-channel', replyToId, author: text(authorNode), createdAt, html: node.innerHTML, domIndex: index };
     });
     return { channel: label, records, warnings: [ 'visible-dom-only', ...(records.some((r) => !r.id) ? ['unstable-or-missing-message-id'] : []) ] };
   }
