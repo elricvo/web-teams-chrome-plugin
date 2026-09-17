@@ -63,7 +63,8 @@ L’extension reste entièrement dans le navigateur. Le seul contenu qui sort es
 
 - Chrome ou Chromium récent ;
 - un compte autorisé à consulter le canal Teams cible ;
-- Teams ouvert dans le navigateur, sur `teams.microsoft.com` ou `teams.cloud.microsoft`.
+- Teams ouvert dans le navigateur, sur `teams.microsoft.com`, `teams.cloud.microsoft` ou `teams.live.com` ;
+- pour Teams Free (`teams.live.com`), l’extension prend en charge l’ouverture d’une conversation personnelle, mais les sélecteurs de message restent à qualifier séparément de ceux des canaux Microsoft 365.
 
 ### Charger l’extension depuis le dépôt cloné
 

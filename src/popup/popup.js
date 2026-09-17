@@ -1,5 +1,6 @@
 import { normalizeMessage, deduplicateMessages, isInPeriod, buildManifest } from '../shared/archive-core.js';
 import { extractRenderedRecords, buildSessionSummary } from '../collector/teams-adapter.js';
+import { isSupportedTeamsUrl } from '../shared/teams-hosts.js';
 
 const $ = (id) => document.getElementById(id);
 let session = null;
@@ -10,7 +11,7 @@ function status(message) { $('status').textContent = message; }
 /** Retourne l’onglet actif ; l’extension n’agit jamais sur un autre onglet. */
 async function activeTab() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (!tab?.id || !/^https:\/\/(teams\.microsoft\.com|teams\.cloud\.microsoft)/.test(tab.url || '')) throw new Error('Ouvre un canal dans Teams Web avant la capture.');
+  if (!tab?.id || !isSupportedTeamsUrl(tab.url)) throw new Error('Ouvre une conversation ou un canal dans Teams Web avant la capture.');
   return tab;
 }
 
