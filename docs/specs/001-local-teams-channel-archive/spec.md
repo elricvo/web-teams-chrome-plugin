@@ -1,13 +1,13 @@
 # Spécification fonctionnelle — Archive locale d’un canal Teams Web
 
 **Fonctionnalité :** `001-local-teams-channel-archive`
-**Statut :** à valider / non implémentée
+**Statut :** V0.1 partiellement implémentée ; capture visible Teams Free qualifiée le 2026-09-17
 **Date :** 2026-09-17
 **Produit :** extension Chrome Manifest V3, locale
 
 ## 1. Problème et objectif
 
-Un utilisateur autorisé à consulter un canal Microsoft Teams dans Teams Web souhaite constituer une archive locale lisible et structurée de l’historique visible du canal, potentiellement sur une longue période, sans droits d’administration Microsoft 365, sans accès Purview et sans transmission de contenu à un tiers.
+Un utilisateur autorisé à consulter un canal Microsoft Teams ou une conversation personnelle Teams Free dans Teams Web souhaite constituer une archive locale lisible et structurée du contenu visible, potentiellement sur une longue période, sans droits d’administration Microsoft 365, sans accès Purview et sans transmission de contenu à un tiers.
 
 L’objectif V1 est de capturer les publications et réponses effectivement rendues par Teams Web, de les dédoublonner, de les organiser par fil et de permettre une exportation locale accompagnée d’un manifeste de couverture.
 
@@ -26,7 +26,7 @@ L’objectif V1 est de capturer les publications et réponses effectivement rend
 
 ### Utilisateur cible
 
-Membre autorisé d’un canal Teams, qui ouvre lui-même le canal dans Teams Web avec son compte professionnel.
+Membre autorisé d’un canal Teams Microsoft 365, ou titulaire d’une conversation Teams Free personnelle, qui ouvre lui-même l’espace cible dans Teams Web.
 
 ### Préconditions
 
@@ -34,6 +34,7 @@ Membre autorisé d’un canal Teams, qui ouvre lui-même le canal dans Teams Web
 2. Le canal cible est déjà ouvert dans l’onglet Teams Web actif.
 3. L’utilisateur définit la période visée et confirme le nom du Team/canal détecté avant toute collecte.
 4. L’utilisateur comprend que la collecte porte sur ce que Teams Web charge et rend visible au compte connecté.
+5. Pour Teams Free, l’utilisateur ouvre une conversation personnelle rendue sur `teams.live.com` ; ce parcours ne prétend pas être un canal Microsoft 365.
 
 ## 4. Parcours utilisateur V1
 
@@ -106,7 +107,7 @@ En tant qu’utilisateur, je veux exporter les données brutes et une version li
 ## 5. Exigences fonctionnelles
 
 - **FR-01 :** l’utilisateur initie chaque collecte ; aucune collecte automatique au chargement de Teams.
-- **FR-02 :** l’extension ne lit que les éléments du canal actif sélectionné et confirmés par l’utilisateur.
+- **FR-02 :** l’extension ne lit que les éléments de l’espace Teams actif sélectionné et confirmés par l’utilisateur : canal Microsoft 365 ou conversation personnelle Teams Free prise en charge.
 - **FR-03 :** l’extension préserve le contenu HTML brut disponible et produit une représentation texte nettoyée, sans exécuter le HTML collecté.
 - **FR-04 :** les mentions, liens et noms sont conservés comme contenu potentiellement personnel ; aucun enrichissement externe n’est réalisé.
 - **FR-05 :** les pièces jointes sont recensées comme métadonnées/références visibles ; aucun téléchargement automatique V1.
@@ -117,7 +118,7 @@ En tant qu’utilisateur, je veux exporter les données brutes et une version li
 ## 6. Exigences de sécurité et confidentialité
 
 - **SEC-01 :** aucune permission Chrome `cookies`, `webRequest`, `debugger`, `management`, `history` ou `downloads` large sans justification revue.
-- **SEC-02 :** permissions limitées à l’onglet Teams Web choisi, via `activeTab` et `scripting` ; le motif d’hôte Teams exact sera fixé après le spike de compatibilité.
+- **SEC-02 :** permissions limitées à l’onglet Teams Web choisi, via `activeTab` et `scripting`. Les origines acceptées sont explicitement `teams.microsoft.com`, `teams.cloud.microsoft` et `teams.live.com` ; aucune `host_permission` large ni `<all_urls>` n’est utilisée.
 - **SEC-03 :** aucune ressource distante : scripts, styles, polices, analytics, télémétrie et mises à jour de contenu externes interdits.
 - **SEC-04 :** aucun contenu collecté n’est injecté avec `innerHTML` sans sanitation ; les vues utilisent le DOM textuel ou une sanitation locale documentée.
 - **SEC-05 :** les journaux applicatifs ne contiennent pas le texte des messages par défaut.
@@ -155,13 +156,18 @@ En tant qu’utilisateur, je veux exporter les données brutes et une version li
 
 ## 9. Mesures de succès V1
 
-- Sur un canal de test autorisé avec jeu de données connu, 100 % des messages rendus et réponses ouvertes sont capturés une fois, sans doublon.
+- Sur un espace de test autorisé avec jeu de données connu, 100 % des messages rendus et réponses ouvertes sont capturés une fois, sans doublon.
+- Qualification réalisée le 2026-09-17 sur une conversation Teams Free : 10 corps de message rendus, 10 messages exportés, identifiants uniques et auteur/date/texte présents. Ce résultat ne vaut que pour les éléments affichés et la version d’interface testée.
 - L’export JSON passe la validation de schéma ; l’HTML est lisible localement et n’exécute aucun contenu de message.
 - Aucune requête réseau ajoutée par l’extension n’est observée.
 - Un utilisateur peut arrêter, reprendre après persistance volontaire, exporter et effacer une session sans assistance technique.
 - Le manifeste rend visibles toutes les limites connues ; aucune interface ne promet « intégral » sans validation.
 
-## 10. Questions à compléter avec Groot
+## 10. Qualification réalisée
+
+La qualification détaillée est conservée dans `docs/COMPATIBILITY.md`. Les artefacts MHTML et exports utilisés comme preuve restent exclusivement dans le coffre local ; seul un résultat agrégé, sans contenu de conversation, est documenté dans le dépôt.
+
+## 11. Questions à compléter avec Groot
 
 1. Le canal cible est-il standard, privé ou partagé ?
 2. Quelle URL Teams Web est utilisée dans l’organisation (`teams.microsoft.com`, autre domaine, client web nouveau/classique) ?

@@ -9,6 +9,10 @@
 
 ## Décisions
 
+### Adaptateurs de DOM séparés selon l’interface
+
+Le test de qualification a confirmé que Teams Free personnel (`teams.live.com`) ne partage pas le même wrapper de message que Teams Microsoft 365. L’extension sélectionne donc explicitement `message-wrapper` pour Teams Free et conserve `comfy-message-wrapper` pour l’interface Microsoft 365. L’identifiant `message-body-*` est préféré dans Teams Free au nom visuel de menu. Cette séparation évite de confondre un aperçu de conversation du rail de navigation avec un message rendu.
+
 ### Pourquoi une extension plutôt qu’un script de console
 
 Une extension offre un consentement visible, un périmètre de permissions contrôlable, une interface de pause/export/effacement et un code versionné/testable. Elle évite de demander à l’utilisateur d’exécuter du code non traçable dans la console.
@@ -24,6 +28,12 @@ Le JSON conserve la structure et permet une transformation ultérieure. L’HTML
 ### Pourquoi score de couverture au lieu d’une promesse d’intégralité
 
 Le navigateur ne peut pas établir de façon fiable qu’il a vu toutes les données du serveur. Le manifeste doit donc exposer des indices de couverture : bornes dates, messages/réponses capturés, éléments non ouverts et erreurs.
+
+## Résultat de spike — Teams Free personnel, 2026-09-17
+
+Un MHTML et un export locaux d’une conversation de test Teams Free ont été comparés sans verser de contenu de conversation dans le dépôt. Dix corps de messages rendus ont été observés dans le DOM, et l’export corrigé a produit dix messages avec identifiants uniques, auteurs et horodatages. Le premier essai avait produit un seul élément de rail de navigation ; la correction d’adaptateur a supprimé ce faux positif.
+
+Cette preuve valide la capture du DOM **déjà rendu** pour le scénario testé. Elle ne valide ni le scroll historique, ni les fils non ouverts, ni l’exhaustivité. Voir `docs/COMPATIBILITY.md`.
 
 ## Questions de spike
 

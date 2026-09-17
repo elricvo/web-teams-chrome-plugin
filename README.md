@@ -7,9 +7,11 @@
 
 ## État du projet
 
-**V0.1 — socle de sécurité et spike de compatibilité.**
+**V0.1 — capture visible qualifiée sur Teams Free ; qualification Microsoft 365 à poursuivre.**
 
-La V0.1 permet une capture locale des éléments **actuellement rendus** dans le canal Teams Web actif, avec export JSON et manifeste de couverture. Elle ne réalise pas encore la remontée automatisée de deux ans d’historique ni l’ouverture systématique des fils ; cette fonction dépend d’un test de compatibilité avec le DOM du Teams Web réel.
+La V0.1 permet une capture locale des éléments **actuellement rendus** dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec export JSON et manifeste de couverture. Une qualification Teams Free du 17 septembre 2026 a confirmé l’export de 10 messages rendus sur 10 attendus, avec identifiants, auteurs et horodatages. Les détails et limites sont dans [la note de compatibilité](docs/COMPATIBILITY.md).
+
+Elle ne réalise pas encore la remontée automatisée de deux ans d’historique ni l’ouverture systématique des fils ; ces fonctions restent à qualifier et implémenter.
 
 > [!WARNING]
 > Cette extension n’est pas un export Microsoft Purview/eDiscovery, ne contourne aucun droit Teams, et ne doit jamais être présentée comme une archive intégrale ou juridiquement probante.
@@ -64,7 +66,7 @@ L’extension reste entièrement dans le navigateur. Le seul contenu qui sort es
 - Chrome ou Chromium récent ;
 - un compte autorisé à consulter le canal Teams cible ;
 - Teams ouvert dans le navigateur, sur `teams.microsoft.com`, `teams.cloud.microsoft` ou `teams.live.com` ;
-- pour Teams Free (`teams.live.com`), l’extension prend en charge l’ouverture d’une conversation personnelle, mais les sélecteurs de message restent à qualifier séparément de ceux des canaux Microsoft 365.
+- pour Teams Free (`teams.live.com`), l’extension prend en charge les conversations personnelles rendues ; la capture visible a été qualifiée sur un jeu de test local. Les longs historiques et les fils restent hors périmètre V0.1.
 
 ### Charger l’extension depuis le dépôt cloné
 
@@ -122,6 +124,7 @@ Les tests unitaires couvrent notamment :
 - [Plan technique](docs/specs/001-local-teams-channel-archive/plan.md)
 - [Recherche et décisions](docs/specs/001-local-teams-channel-archive/research.md)
 - [Plan de contrôle](docs/CONTROL-PLAN.md)
+- [Compatibilité et résultat de qualification](docs/COMPATIBILITY.md)
 - [Protocole d’installation et de test](docs/INSTALL-TEST.md)
 - [Tâches restantes](docs/specs/001-local-teams-channel-archive/tasks.md)
 

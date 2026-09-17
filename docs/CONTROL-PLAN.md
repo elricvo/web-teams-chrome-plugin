@@ -51,6 +51,16 @@ Déterminer si l’extension est techniquement sûre, fonctionnelle pour le cont
 
 **Critère go/no-go :** si les identifiants/sélecteurs ne sont pas assez stables, l’export long automatisé reste désactivé et l’extension se limite à une capture manuelle d’éléments rendus.
 
+### Résultat de qualification Teams Free, 2026-09-17
+
+- [x] Conversation personnelle autorisée sur `teams.live.com` : hôte accepté après geste utilisateur.
+- [x] Comparaison locale MHTML/export : 10 corps de message rendus et 10 messages exportés, chacun avec identifiant unique, auteur et horodatage.
+- [x] Manifest : bornes observées cohérentes avec la période demandée ; avertissement `visible-dom-only` et couverture `partial` conservés.
+- [x] Le faux positif de rail de navigation observé au premier essai est empêché par un adaptateur Teams Free séparé.
+- [ ] Scroll rétroactif, virtualisation, fils/réponses et changement d’espace restent à qualifier.
+
+**Preuve :** `docs/COMPATIBILITY.md` et artefacts de test conservés exclusivement dans le coffre local.
+
 ### C4 — Test fonctionnel d’extension dans Chrome/Chromium
 
 - [ ] Chargement de l’extension non empaquetée sans erreur manifeste.

@@ -17,6 +17,19 @@
 5. Exporter le JSON/manifeste, puis vérifier localement les compteurs et limitations.
 6. Cliquer « Effacer la session locale », fermer/réouvrir le popup et vérifier l’absence de session.
 
+## Test qualifié Teams Free personnel
+
+Le 2026-09-17, une conversation de test autorisée sur `teams.live.com` a été qualifiée après comparaison locale d’un MHTML avec l’export. Les 10 messages rendus ont été exportés une seule fois avec identifiants uniques, auteurs, horodatages et texte normalisé. Les artefacts restent dans le coffre local et ne doivent jamais être ajoutés à Git.
+
+Pour répéter ce test :
+
+1. mettre le dépôt à jour avec `git pull` ;
+2. recharger l’extension dans `chrome://extensions` ;
+3. actualiser l’onglet Teams ;
+4. rendre visibles les messages de test et renseigner la période ;
+5. lancer la capture puis vérifier JSON/manifeste ;
+6. confirmer que le manifeste porte toujours `visible-dom-only` et `partial`.
+
 ## Limitation V0.1 bloquante pour un historique de deux ans
 
 Le scroll rétroactif, l’ouverture des fils et les sélecteurs Teams ne sont pas encore qualifiés. Ne pas utiliser V0.1 pour une collecte longue : elle sert uniquement au **spike de compatibilité** et à valider le circuit local de capture/export.
