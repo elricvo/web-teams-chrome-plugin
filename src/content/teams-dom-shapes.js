@@ -1,7 +1,7 @@
 // Helpers sans dépendance, chargés avant le collecteur dans le contexte isolé Chrome.
 (() => {
-  /** Retourne le sélecteur du wrapper Teams observé dans le MHTML de qualification. */
-  function messageSelector() { return '[data-testid="comfy-message-wrapper"]'; }
+  /** Retourne le sélecteur de message approprié à l’interface Teams détectée. */
+  function messageSelector(hostname = '') { return hostname === 'teams.live.com' ? '[data-testid="message-wrapper"]' : '[data-testid="comfy-message-wrapper"]'; }
 
   /** Normalise uniquement les formats de date observés ; ne devine pas les dates relatives. */
   function normalizeTeamsTimestamp(value) {
@@ -16,9 +16,12 @@
 
   /** Extrait l’identifiant stable du vrai élément de message, sans utiliser l’ID du panneau. */
   function messageId(wrapper) {
-    const node = wrapper.querySelector?.('[id^="message-preview-chat-list-item_"]') || wrapper;
-    const id = node.getAttribute?.('id') || node.id || null;
-    return id?.replace(/^message-preview-chat-list-item_/, '') || null;
+    const preview = wrapper.querySelector?.('[id^="message-preview-chat-list-item_"]');
+    if (preview) return (preview.getAttribute?.('id') || preview.id || '').replace(/^message-preview-chat-list-item_/, '') || null;
+    const body = wrapper.querySelector?.('[id^="message-body-"]');
+    if (body) return (body.getAttribute?.('id') || body.id || '').replace(/^message-body-/, '') || null;
+    const id = wrapper.getAttribute?.('id') || wrapper.id || null;
+    return id || null;
   }
 
   globalThis.TeamsArchiveDom = { messageSelector, normalizeTeamsTimestamp, messageId };

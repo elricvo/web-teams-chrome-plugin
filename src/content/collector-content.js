@@ -5,7 +5,7 @@
 
   function text(node) { return node?.textContent?.replace(/\s+/g, ' ').trim() || null; }
   const dom = globalThis.TeamsArchiveDom;
-  function candidateNodes() { return dom ? [...document.querySelectorAll(dom.messageSelector())] : []; }
+  function candidateNodes() { return dom ? [...document.querySelectorAll(dom.messageSelector(window.location.hostname))] : []; }
   function channelLabel() {
     const heading = document.querySelector('h1,[role="heading"][aria-level="1"],header [data-tid*="channel"]');
     return text(heading) || document.title || null;
