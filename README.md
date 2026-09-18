@@ -7,9 +7,9 @@
 
 ## État du projet
 
-**V0.3.2 — sauvegarde autonome Markdown + images dans un même dossier local.**
+**V1.0.0 — archive locale progressive, Markdown autonome et images liées.**
 
-La V0.3.0 permet une capture locale du contenu rendu dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Après un clic explicite, une date de début obligatoire et la confirmation d’autorisation, elle peut faire remonter automatiquement le panneau de messages : chaque lot rendu est dédoublonné et sauvegardé localement avant la virtualisation suivante. Le Markdown isole strictement `[data-message-content]`, exclut contrôles et réactions, et intègre les images rendues sous forme Markdown locale avec leur horodatage ; elles deviennent visibles dans un lecteur Markdown après le téléchargement explicite correspondant. L’automatisation s’arrête à la date cible, au haut stable de l’historique, au plafond choisi, à la demande de l’utilisateur ou dès que la conversation devient ambiguë. Elle ne promet jamais une archive exhaustive et ne force pas l’ouverture des fils. Les décisions, l’architecture et limites sont documentées dans [la conception de collecte automatique](docs/AUTOMATED-HISTORY-COLLECTION.md).
+La V1.0.0 permet une capture locale du contenu rendu dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Après un clic explicite, une date de début obligatoire et la confirmation d’autorisation, elle peut faire remonter automatiquement le panneau de messages : chaque lot rendu est dédoublonné et sauvegardé localement avant la virtualisation suivante. Le Markdown isole strictement `[data-message-content]`, exclut contrôles et réactions, et intègre les images rendues sous forme Markdown locale avec leur horodatage ; elles deviennent visibles dans un lecteur Markdown après le téléchargement explicite correspondant. L’automatisation s’arrête à la date cible, au haut stable de l’historique, au plafond choisi, à la demande de l’utilisateur ou dès que la conversation devient ambiguë. Elle ne promet jamais une archive exhaustive et ne force pas l’ouverture des fils. Les décisions, l’architecture et limites sont documentées dans [la conception de collecte automatique](docs/AUTOMATED-HISTORY-COLLECTION.md).
 
 > [!WARNING]
 > Cette extension n’est pas un export Microsoft Purview/eDiscovery, ne contourne aucun droit Teams, et ne doit jamais être présentée comme une archive intégrale ou juridiquement probante.
@@ -85,7 +85,7 @@ L’extension reste entièrement dans le navigateur. Le seul contenu qui sort es
 
 Aucune installation `npm`, aucun build et aucun serveur ne sont nécessaires pour charger l’extension.
 
-## Utilisation V0.3
+## Utilisation V1.0
 
 1. Dans Teams Web, ouvre **le canal précis** que tu es autorisé à archiver.
 2. Vérifie visuellement le Team et le canal avant toute action.
@@ -134,9 +134,9 @@ Les tests unitaires couvrent notamment :
 - [Protocole d’installation et de test](docs/INSTALL-TEST.md)
 - [Tâches restantes](docs/specs/001-local-teams-channel-archive/tasks.md)
 
-## Prochain jalon : spike Teams Web
+## Qualification V1.0 avant corpus de production
 
-Avant toute collecte longue, il faut qualifier le DOM Teams sur un canal de test autorisé : sélecteurs, identifiants disponibles, chargement rétroactif, virtualisation, fils de discussion et arrêt propre en cas de changement de canal. Les critères de go/no-go sont décrits dans le [plan de contrôle](docs/CONTROL-PLAN.md).
+Le socle V1.0 est testé automatiquement et empaqueté, mais la qualification interactive dans chaque interface Teams cible reste obligatoire : sélecteurs, chargement rétroactif, virtualisation, fils de discussion, arrêt propre et contrôle réseau. Les critères de go/no-go sont décrits dans le [plan de contrôle](docs/CONTROL-PLAN.md).
 
 ## Licence
 

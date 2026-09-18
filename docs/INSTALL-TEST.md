@@ -1,4 +1,4 @@
-# Installer et qualifier V0.1 dans Chrome / Chromium
+# Installer et qualifier V1.0 dans Chrome / Chromium
 
 ## Charger l’extension non empaquetée
 
@@ -13,9 +13,9 @@
 1. Ouvrir un canal de test Teams Web auquel tu es autorisé à accéder.
 2. Ouvrir le popup, vérifier l’avertissement et ne cocher l’autorisation qu’après contrôle du canal.
 3. Cliquer « Capturer les éléments actuellement rendus ».
-4. Vérifier que l’interface ne promet pas un export complet ; V0.1 ne capture que le DOM actuellement rendu.
+4. Vérifier que l’interface ne promet pas un export complet : V1.0 capture le DOM rendu et conserve le statut `partial`.
 5. Exporter le JSON/manifeste et le Markdown, puis vérifier localement les compteurs, limitations et la lisibilité de la transcription.
-6. Si des images sont visibles, cliquer séparément sur « Télécharger les images rendues » et vérifier que Chrome les place sous `teams-archive-images/YYYY-MM-DD/` ; vérifier que les vidéos ne sont pas demandées.
+6. Si des images sont visibles, cliquer **Sauvegarder Markdown + images** et vérifier que Chrome place le `.md` et le sous-dossier `images/` sous le même dossier `teams-archive-<horodatage>/` ; ouvrir le Markdown local et vérifier l’affichage des images téléchargées. Vérifier que les vidéos ne sont jamais demandées.
 7. Cliquer « Effacer la session locale », fermer/réouvrir le popup et vérifier l’absence de session.
 
 ## Correctif V0.2.1 — texte Markdown nettoyé
@@ -47,9 +47,9 @@ Pour répéter ce test :
 5. lancer la capture puis vérifier JSON/manifeste ;
 6. confirmer que le manifeste porte toujours `visible-dom-only` et `partial`.
 
-## Collecte automatique V0.3 — qualification obligatoire
+## Collecte automatique V1.0 — qualification obligatoire
 
-La V0.3 peut remonter le fil sans action manuelle après le clic de départ. Elle reste une collecte du DOM rendu, non un export Microsoft officiel.
+La V1.0 peut remonter le fil sans action manuelle après le clic de départ. Elle reste une collecte du DOM rendu, non un export Microsoft officiel.
 
 1. Utiliser une conversation de test autorisée avec des messages fictifs couvrant plusieurs dates.
 2. Recharger l’extension et l’onglet Teams, ouvrir **une seule** conversation cible et ne plus la manipuler pendant le parcours.
@@ -62,7 +62,7 @@ La V0.3 peut remonter le fil sans action manuelle après le clic de départ. Ell
 
 Le comportement, les conditions d’arrêt, les données conservées et les limites sont décrits dans [AUTOMATED-HISTORY-COLLECTION.md](AUTOMATED-HISTORY-COLLECTION.md).
 
-## Limites V0.3 pour les corpus longs
+## Limites V1.0 pour les corpus longs
 
 Ne pas présenter le résultat comme complet. L’historique dépend de ce que Teams rend pour le compte connecté, des droits, de la rétention, de la session, du réseau, de la virtualisation et du DOM courant. Les fils et réponses fermés ne sont pas ouverts automatiquement. Un rechargement/fermeture de l’onglet interrompt la boucle ; la persistance locale ne la reprend pas d’elle-même afin d’éviter toute action non sollicitée dans une nouvelle conversation.
 

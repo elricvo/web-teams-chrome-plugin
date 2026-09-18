@@ -5,14 +5,14 @@
 - **Plateforme :** Chrome / Chromium, extension Manifest V3.
 - **Cible :** Teams Web dans l’onglet actif d’un utilisateur authentifié et autorisé.
 - **Mode :** local-first, sans backend ni API Microsoft Graph.
-- **Maturité :** V0.1 de capture visible ; Teams Free personnel qualifié le 2026-09-17, Teams Microsoft 365 et historique long à poursuivre.
+- **Maturité :** V1.0 locale : capture visible, collecte progressive contrôlée, export JSON/Markdown et bundle Markdown+images ; qualification interactive Teams à poursuivre.
 
 ## 2. Décision d’architecture
 
 Le produit utilisera une extension Chrome à trois responsabilités séparées :
 
 1. **Popup / page d’archive** : consentement, sélection de période, état de session, tableau de bord, export et effacement.
-2. **Content script injecté à la demande** : charge les helpers DOM versionnés, détecte l’interface Teams approuvée et extrait uniquement les éléments rendus de l’onglet confirmé. Le défilement contrôlé reste à implémenter.
+2. **Content script injecté à la demande** : charge les helpers DOM versionnés, détecte l’interface Teams approuvée et extrait uniquement les éléments rendus de l’onglet confirmé. Il fait défiler de manière limitée le seul panneau de conversation après un clic explicite, puis s’arrête sur les conditions documentées.
 3. **Service worker** : coordonne les messages, maintient l’état temporaire, applique les règles de stockage volontaire et construit les exports.
 
 Aucune API Teams interne ou Graph ne sera appelée. Cette limite réduit les privilèges mais impose de ne jamais promettre une couverture que le DOM visible ne permet pas de vérifier.
@@ -22,12 +22,11 @@ Aucune API Teams interne ou Graph ne sera appelée. Cette limite réduit les pri
 | Décision | Choix V1 | Justification |
 |---|---|---|
 | Périmètre | Un espace Teams actif confirmé : canal Microsoft 365 ou conversation Teams Free | Évite une collecte accidentelle multi-espaces tout en séparant les interfaces qualifiées. |
-| Acquisition | DOM rendu, avec adaptateur explicite selon l’interface ; défilement ultérieur | Teams Free qualifié sur `message-wrapper`; Microsoft 365 utilise un adaptateur distinct. Aucun contournement ni interception de trafic. |
-| Réponses | Capture uniquement si ouvertes/rendues ; stratégie d’ouverture à valider par spike | Évite de déclarer les fils complets sans visibilité réelle. |
-| Pièces jointes | Métadonnées/références visibles | Évite un second flux de téléchargement et le risque de droits SharePoint. |
+| Acquisition | DOM rendu, adaptateur explicite et collecte progressive limitée | Les lots rendus sont mémorisés avant virtualisation ; aucun contournement ni interception de trafic. |
+| Réponses | Capture uniquement si ouvertes/rendues ; ouverture automatique hors périmètre | Évite de déclarer les fils complets sans visibilité réelle. |
+| Images | Images HTTP(S) rendues, uniquement sur action explicite ; bundle Markdown relatif | Les vidéos/blob/data et pièces jointes génériques restent exclus ; les échecs d’accès sont signalés. |
 | Persistances | `chrome.storage.local`, opt-in, effaçable | Nécessaire à un historique long mais explicite pour les données sensibles. |
-| Export | JSON brut + HTML lisible + manifeste | Sépare la preuve de collecte de la consultation. |
-| Sortie Markdown | Hors V1 initiale | Peut être ajoutée après validation du modèle JSON. |
+| Export | JSON brut + Markdown lisible + manifeste + bundle Markdown/images | Sépare le corpus structuré, la consultation et la couverture. |
 
 ## 4. Arborescence prévue
 

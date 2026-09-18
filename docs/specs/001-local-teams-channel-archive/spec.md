@@ -1,7 +1,7 @@
 # Spécification fonctionnelle — Archive locale d’un canal Teams Web
 
 **Fonctionnalité :** `001-local-teams-channel-archive`
-**Statut :** V0.3 implémentée ; qualification Chrome interactive du scroll automatique à réaliser
+**Statut :** V1.0 implémentée ; qualification Chrome interactive du scroll automatique à réaliser
 **Date :** 2026-09-17
 **Produit :** extension Chrome Manifest V3, locale
 

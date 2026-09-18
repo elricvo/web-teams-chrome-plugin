@@ -1,8 +1,8 @@
-# Collecte automatique d’historique Teams Web — conception V0.3
+# Collecte automatique d’historique Teams Web — conception V1.0
 
 ## Objet et niveau de garantie
 
-La V0.3 automatise la **remontée visuelle** d’une conversation Teams Web depuis l’onglet que l’utilisateur a lui-même ouvert et confirmé. Elle ne lit ni API privée, ni cookies, ni jetons, ni trafic réseau Teams. Elle n’est donc pas un export Microsoft 365 officiel et ne prouve jamais l’exhaustivité.
+La V1.0 automatise la **remontée visuelle** d’une conversation Teams Web depuis l’onglet que l’utilisateur a lui-même ouvert et confirmé. Elle ne lit ni API privée, ni cookies, ni jetons, ni trafic réseau Teams. Elle n’est donc pas un export Microsoft 365 officiel et ne prouve jamais l’exhaustivité.
 
 Elle répond au besoin pratique suivant : Teams virtualise l’historique ; le DOM ne contient qu’un nombre limité de messages. La collecte progressive archive chaque lot rendu avant que Teams ne le remplace par un lot plus ancien.
 
@@ -100,7 +100,7 @@ L’option **Sauvegarder Markdown + images** crée, en un seul geste explicite, 
 
 Sur une conversation de test autorisée contenant des messages fictifs datés :
 
-1. charger l’extension V0.3, recharger l’onglet Teams et choisir une date cible connue ;
+1. charger l’extension V1.0, recharger l’onglet Teams et choisir une date cible connue ;
 2. lancer la collecte, sans toucher l’onglet ;
 3. vérifier dans le manifeste le motif d’arrêt, les lots, les bornes observées et l’avertissement `partial` ;
 4. comparer le nombre d’identifiants uniques obtenu avec le corpus de test attendu ;

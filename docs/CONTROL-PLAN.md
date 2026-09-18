@@ -57,7 +57,7 @@ Déterminer si l’extension est techniquement sûre, fonctionnelle pour le cont
 - [x] Comparaison locale MHTML/export : 10 corps de message rendus et 10 messages exportés, chacun avec identifiant unique, auteur et horodatage.
 - [x] Manifest : bornes observées cohérentes avec la période demandée ; avertissement `visible-dom-only` et couverture `partial` conservés.
 - [x] Le faux positif de rail de navigation observé au premier essai est empêché par un adaptateur Teams Free séparé.
-- [ ] Scroll rétroactif et virtualisation : moteur V0.3 implémenté ; qualification Chrome interactive à effectuer selon `docs/AUTOMATED-HISTORY-COLLECTION.md`.
+- [ ] Scroll rétroactif et virtualisation : moteur V1.0 implémenté ; qualification Chrome interactive à effectuer selon `docs/AUTOMATED-HISTORY-COLLECTION.md`.
 - [ ] Fils/réponses et changement d’espace restent à qualifier.
 
 **Preuve :** `docs/COMPATIBILITY.md` et artefacts de test conservés exclusivement dans le coffre local.
@@ -67,7 +67,7 @@ Déterminer si l’extension est techniquement sûre, fonctionnelle pour le cont
 - [ ] Chargement de l’extension non empaquetée sans erreur manifeste.
 - [ ] Le popup n’agit sur Teams qu’après clic utilisateur.
 - [ ] L’extension n’agit que dans l’onglet Teams sélectionné.
-- [ ] La collecte automatique V0.3 s’arrête correctement sur borne, plafond, arrêt utilisateur et changement de canal.
+- [ ] La collecte automatique V1.0 s’arrête correctement sur borne, plafond, arrêt utilisateur et changement de canal.
 - [ ] L’export JSON, HTML et manifeste sont déclenchés explicitement.
 - [ ] Les fichiers exportés s’ouvrent hors ligne.
 - [ ] Le manifeste indique la période demandée/observée, compteurs, erreurs et limites.

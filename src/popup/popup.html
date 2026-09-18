@@ -5,7 +5,7 @@
 </head>
 <body>
   <main>
-    <p class="eyebrow">V0.3 · collecte locale progressive</p>
+    <p class="eyebrow">V1.0 · archive locale progressive</p>
     <h1>Archive Teams locale</h1>
     <p class="warning">Ne pas utiliser comme export officiel ou preuve d’exhaustivité. Seul le contenu rendu et accessible dans l’onglet Teams actif peut être capturé.</p>
     <label><input id="authorize" type="checkbox"> Je confirme être autorisé à archiver ce canal.</label>
@@ -21,7 +21,7 @@
     <button id="download-images" type="button" disabled>Télécharger les images rendues</button>
     <button id="erase" class="secondary" type="button">Effacer la session locale</button>
     <p id="status" role="status">Ouvre le canal Teams Web cible puis confirme l’autorisation.</p>
-    <details><summary>Limites V0.3</summary><ul><li>Une date « Du » est obligatoire pour la collecte automatique ; Teams doit rester ouvert et le poste éveillé.</li><li>Le scroll s’arrête à la borne observée, au haut stable, au plafond, sur arrêt utilisateur ou dès que la conversation devient ambiguë.</li><li>Les fils fermés, messages non rendus, vidéos et pièces jointes génériques ne sont pas récupérés.</li><li>Les images ne sont téléchargées qu’après un clic explicite, depuis les URL HTTP(S) déjà rendues ; un lien expiré ou protégé peut échouer.</li><li>Le manifeste conserve les compteurs, bornes observées et motifs d’arrêt ; la couverture reste partielle.</li></ul></details>
+    <details><summary>Limites V1.0</summary><ul><li>Une date « Du » est obligatoire pour la collecte automatique ; Teams doit rester ouvert et le poste éveillé.</li><li>Le scroll s’arrête à la borne observée, au haut stable, au plafond, sur arrêt utilisateur ou dès que la conversation devient ambiguë.</li><li>Les fils fermés, messages non rendus, vidéos et pièces jointes génériques ne sont pas récupérés.</li><li>Les images ne sont téléchargées qu’après un clic explicite, depuis les URL HTTP(S) déjà rendues ; un lien expiré ou protégé peut échouer.</li><li>Le manifeste conserve les compteurs, bornes observées et motifs d’arrêt ; la couverture reste partielle.</li></ul></details>
   </main>
   <script type="module" src="popup.js"></script>
 </body>
