@@ -14,8 +14,9 @@
 2. Ouvrir le popup, vérifier l’avertissement et ne cocher l’autorisation qu’après contrôle du canal.
 3. Cliquer « Capturer les éléments actuellement rendus ».
 4. Vérifier que l’interface ne promet pas un export complet ; V0.1 ne capture que le DOM actuellement rendu.
-5. Exporter le JSON/manifeste, puis vérifier localement les compteurs et limitations.
-6. Cliquer « Effacer la session locale », fermer/réouvrir le popup et vérifier l’absence de session.
+5. Exporter le JSON/manifeste et le Markdown, puis vérifier localement les compteurs, limitations et la lisibilité de la transcription.
+6. Si des images sont visibles, cliquer séparément sur « Télécharger les images rendues » et vérifier que Chrome les place sous `teams-archive-images/YYYY-MM-DD/` ; vérifier que les vidéos ne sont pas demandées.
+7. Cliquer « Effacer la session locale », fermer/réouvrir le popup et vérifier l’absence de session.
 
 ## Correctif V0.1.1 — conversations Microsoft 365
 

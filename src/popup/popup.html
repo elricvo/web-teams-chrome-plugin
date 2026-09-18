@@ -5,7 +5,7 @@
 </head>
 <body>
   <main>
-    <p class="eyebrow">V0.1 · capture visible contrôlée</p>
+    <p class="eyebrow">V0.2 · capture visible contrôlée</p>
     <h1>Archive Teams locale</h1>
     <p class="warning">Ne pas utiliser comme export officiel ou preuve d’exhaustivité. Seul le contenu rendu et accessible dans l’onglet Teams actif peut être capturé.</p>
     <label><input id="authorize" type="checkbox"> Je confirme être autorisé à archiver ce canal.</label>
@@ -13,9 +13,11 @@
     <div class="dates"><label>Du <input id="from" type="date"></label><label>Au <input id="to" type="date"></label></div>
     <button id="capture" type="button">Capturer les éléments actuellement rendus</button>
     <button id="export" type="button" disabled>Exporter JSON + manifeste</button>
+    <button id="export-markdown" type="button" disabled>Exporter Markdown lisible</button>
+    <button id="download-images" type="button" disabled>Télécharger les images rendues</button>
     <button id="erase" class="secondary" type="button">Effacer la session locale</button>
     <p id="status" role="status">Ouvre le canal Teams Web cible puis confirme l’autorisation.</p>
-    <details><summary>Limites V0.1</summary><ul><li>Pas de scroll automatique ni d’ouverture de fils : le spike Teams DOM reste à valider.</li><li>Pas de téléchargement de pièces jointes.</li><li>Aucun appel réseau ajouté par l’extension.</li></ul></details>
+    <details><summary>Limites V0.2</summary><ul><li>Pas de scroll automatique ni d’ouverture de fils : le spike Teams DOM reste à valider.</li><li>Pas de téléchargement de pièces jointes ni de vidéos.</li><li>Les images ne sont téléchargées qu’après un clic explicite, depuis les URL HTTP(S) déjà rendues ; un lien expiré ou protégé peut échouer.</li></ul></details>
   </main>
   <script type="module" src="popup.js"></script>
 </body>

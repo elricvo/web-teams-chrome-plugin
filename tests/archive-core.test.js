@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeMessage, deduplicateMessages, isInPeriod, buildManifest, toSafeText } from '../src/shared/archive-core.js';
+import { normalizeMessage, deduplicateMessages, isInPeriod, buildManifest, toSafeText, buildImageDownloadPlan, buildMarkdownArchive } from '../src/shared/archive-core.js';
 
 test('normalise un message en texte sûr sans exécuter son HTML', () => {
   const result = normalizeMessage({ id: 'm-1', author: 'Ada', createdAt: '2026-01-05T10:00:00Z', html: '<p>Bonjour <b>équipe</b><script>alert(1)</script></p>' });
@@ -45,4 +45,27 @@ test('construit un manifeste qui expose les limites et les compteurs', () => {
 
 test('transforme le HTML hostile en texte inerte', () => {
   assert.equal(toSafeText('<img src=x onerror=alert(1)>Bonjour&nbsp;<a href="javascript:evil()">monde</a>'), 'Bonjour monde');
+});
+
+test('prépare seulement les images HTTPS rendues, sans doublon ni vidéo/blob', () => {
+  const plan = buildImageDownloadPlan([{ images: [
+    { url: 'https://cdn.example.test/plan.png?token=secret', alt: 'Plan' },
+    { url: 'https://cdn.example.test/plan.png?token=secret', alt: 'Doublon' },
+    { url: 'blob:https://teams.microsoft.com/abc', alt: 'Non exportable' },
+    { url: 'data:image/png;base64,abc', alt: 'Non exportable' }
+  ] }], '2026-09-18');
+  assert.deepEqual(plan, [{ url: 'https://cdn.example.test/plan.png?token=secret', alt: 'Plan', filename: 'teams-archive-images/2026-09-18/image-001.png' }]);
+});
+
+test('génère un Markdown chronologique lisible sans rendre le texte archivé actif', () => {
+  const markdown = buildMarkdownArchive({
+    channel: { channel: 'Conversation test' },
+    requestedPeriod: { from: '2026-09-16', to: '2026-09-18' },
+    messages: [{ author: 'Ada', createdAt: '2026-09-18T10:00:00Z', text: '# Faux titre\nBonjour', images: [{ url: 'https://cdn.example.test/plan.webp', alt: 'Plan' }] }],
+    warnings: ['visible-dom-only']
+  }, '2026-09-18');
+  assert.match(markdown, /# Archive Teams/);
+  assert.match(markdown, /### 1\. Ada — 2026-09-18T10:00:00Z/);
+  assert.match(markdown, /> # Faux titre/);
+  assert.match(markdown, /teams-archive-images\/2026-09-18\/image-001\.webp/);
 });

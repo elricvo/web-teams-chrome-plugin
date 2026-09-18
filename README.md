@@ -7,9 +7,9 @@
 
 ## État du projet
 
-**V0.1.1 — capture visible qualifiée sur Teams Free ; correctif Microsoft 365 basé sur un MHTML réel.**
+**V0.2.0 — capture visible, export Markdown et téléchargement explicite des images rendues.**
 
-La V0.1.1 permet une capture locale des éléments **actuellement rendus** dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec export JSON et manifeste de couverture. Une qualification Teams Free du 17 septembre 2026 a confirmé l’export de 10 messages rendus sur 10 attendus. Le correctif du 18 septembre cible, y compris sur `teams.microsoft.com`, les vraies cartes de conversation `message-wrapper` avec un corps `message-body-*`, au lieu des aperçus de navigation `comfy-message-wrapper` qui provoquaient un export vide après filtrage de période. Les détails et limites sont dans [la note de compatibilité](docs/COMPATIBILITY.md).
+La V0.2.0 permet une capture locale des éléments **actuellement rendus** dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Une qualification Teams Free du 17 septembre 2026 a confirmé l’export de 10 messages rendus sur 10 attendus. Le correctif du 18 septembre cible, y compris sur `teams.microsoft.com`, les vraies cartes de conversation `message-wrapper` avec un corps `message-body-*`, au lieu des aperçus de navigation `comfy-message-wrapper` qui provoquaient un export vide après filtrage de période. Le Markdown utilise du texte cité, pas le HTML Teams ; les images sont téléchargées seulement depuis des URL HTTP(S) déjà rendues et uniquement par clic explicite. Les détails et limites sont dans [la note de compatibilité](docs/COMPATIBILITY.md).
 
 Elle ne réalise pas encore la remontée automatisée de deux ans d’historique ni l’ouverture systématique des fils ; ces fonctions restent à qualifier et implémenter.
 
@@ -23,7 +23,8 @@ Elle ne réalise pas encore la remontée automatisée de deux ans d’historique
 - collecte les éléments que Teams a déjà rendus dans le navigateur ;
 - normalise le contenu, dédoublonne les messages, applique une période de consultation et signale les données incomplètes ;
 - conserve les données dans la session du navigateur, ou dans le stockage local de l’extension si l’utilisateur coche explicitement cette option ;
-- exporte un JSON brut et un `manifest.json` expliquant le périmètre, les compteurs et les limites ;
+- exporte un JSON brut, un `manifest.json` et une transcription Markdown lisible expliquant le périmètre, les compteurs et les limites ;
+- peut télécharger, après un clic distinct et explicite, les images HTTP(S) déjà rendues dans le contenu ou les aperçus de pièce jointe ;
 - permet l’effacement explicite des données locales.
 
 ## Ce que l’extension ne fait pas
@@ -32,7 +33,7 @@ Elle ne réalise pas encore la remontée automatisée de deux ans d’historique
 - ne contourne ni MFA, ni permissions Teams, ni rétention Microsoft 365 ;
 - n’appelle pas Microsoft Graph ou des API Teams privées ;
 - n’envoie pas les messages à un serveur, une IA, un analytics ou un tiers ;
-- ne télécharge pas les pièces jointes en V0.1 ;
+- ne télécharge pas les pièces jointes génériques ni les vidéos ; seules les images déjà rendues sont éligibles après clic explicite ;
 - ne récupère pas les messages supprimés, purgés ou invisibles pour le compte connecté ;
 - ne promet pas une couverture exhaustive.
 
@@ -93,14 +94,17 @@ Aucune installation `npm`, aucun build et aucun serveur ne sont nécessaires pou
 5. Facultatif : choisis une période de consultation et coche la persistance locale si tu souhaites conserver temporairement la session après fermeture.
 6. Clique sur **Capturer les éléments actuellement rendus**.
 7. Lis le statut et les limites affichées. En V0.1, il est normal qu’un état `partial` soit signalé.
-8. Clique sur **Exporter JSON + manifeste** et choisis l’emplacement de téléchargement dans Chrome.
-9. Après usage, clique sur **Effacer la session locale**.
+8. Clique sur **Exporter JSON + manifeste** pour le corpus structuré, ou **Exporter Markdown lisible** pour une lecture humaine.
+9. Facultatif : clique séparément sur **Télécharger les images rendues**. Seules les balises d’image HTTP(S) déjà visibles dans le contenu ou les aperçus de pièce jointe sont demandées à Chrome ; les vidéos, `blob:` et `data:` sont ignorés. Les fichiers sont placés dans `teams-archive-images/YYYY-MM-DD/` sous le dossier de téléchargement Chrome et les liens peuvent échouer s’ils ont expiré ou exigent un accès non disponible au téléchargement.
+10. Après usage, clique sur **Effacer la session locale**.
 
 ### Fichiers exportés
 
 | Fichier | Contenu | Usage |
 |---|---|---|
 | `teams-archive-YYYY-MM-DD.json` | Messages/réponses capturés et métadonnées de session | Transformation et analyse locale ultérieures |
+| `teams-archive-YYYY-MM-DD.md` | Transcription chronologique lisible, avec les messages cités | Lecture humaine, Obsidian ou traitement Markdown local |
+| `teams-archive-images/YYYY-MM-DD/` | Images HTTP(S) rendues, téléchargées seulement à la demande | Références locales mentionnées dans le Markdown ; absence possible en cas de lien expiré/refusé |
 | `teams-archive-YYYY-MM-DD-manifest.json` | Canal, période, compteurs, erreurs, bornes observées, limites | Lire la couverture et ne pas surinterpréter l’archive |
 
 ## Développement

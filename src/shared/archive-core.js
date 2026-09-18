@@ -22,6 +22,70 @@ export function toSafeText(html) {
     .trim();
 }
 
+/** Évite qu'un contenu archivé ne devienne une structure Markdown active. */
+export function quoteMarkdown(value) {
+  return String(value ?? '').replace(/\r\n?/g, '\n').split('\n').map((line) => `> ${line}`).join('\n');
+}
+
+/** Produit un nom local déterministe et sans chemin pour une image rendue. */
+export function imageFilename(url, index) {
+  let extension = 'img';
+  try {
+    const name = new URL(url).pathname.split('/').pop() || '';
+    const match = name.match(/\.([a-z0-9]{1,5})$/i);
+    if (match) extension = match[1].toLowerCase();
+  } catch { /* URL invalide : conservée avec une extension générique. */ }
+  return `image-${String(index + 1).padStart(3, '0')}.${extension}`;
+}
+
+/**
+ * Prépare les images HTTP(S) déjà rendues pour un téléchargement explicitement demandé.
+ * Les données `blob:`, `data:` et les vidéos sont hors périmètre.
+ */
+export function buildImageDownloadPlan(messages = [], stamp = 'archive') {
+  const seen = new Set();
+  const plan = [];
+  messages.forEach((message) => (message.images || []).forEach((image) => {
+    const url = image?.url;
+    if (typeof url !== 'string' || !/^https?:\/\//i.test(url) || seen.has(url)) return;
+    seen.add(url);
+    plan.push({ url, alt: String(image.alt || 'Image Teams'), filename: `teams-archive-images/${stamp}/${imageFilename(url, plan.length)}` });
+  }));
+  return plan;
+}
+
+/** Construit une archive Markdown lisible sans insérer le HTML Teams non fiable. */
+export function buildMarkdownArchive({ channel = {}, requestedPeriod = {}, messages = [], replies = [], warnings = [] } = {}, stamp = new Date().toISOString().slice(0, 10)) {
+  const all = [...messages, ...replies].slice().sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
+  const imagePlan = buildImageDownloadPlan(all, stamp);
+  const filenameByUrl = new Map(imagePlan.map((image) => [image.url, image.filename]));
+  const lines = [
+    '# Archive Teams — consultation locale',
+    '',
+    '> Ce document est dérivé du contenu rendu dans Teams Web. Il ne constitue pas un export officiel ni une preuve d’exhaustivité.',
+    '',
+    '## Périmètre',
+    '',
+    `- **Conversation / canal :** ${channel.channel || 'Non identifié'}`,
+    `- **Période demandée :** ${requestedPeriod.from || 'sans borne'} → ${requestedPeriod.to || 'sans borne'}`,
+    `- **Messages :** ${messages.length} · **réponses :** ${replies.length}`,
+    `- **Limites :** ${warnings.length ? warnings.join(', ') : 'aucune signalée'}`,
+    '',
+    '## Échanges',
+    ''
+  ];
+  all.forEach((message, index) => {
+    lines.push(`### ${index + 1}. ${message.author || 'Auteur inconnu'} — ${message.createdAt || 'Date indisponible'}`, '', quoteMarkdown(message.text || '(message sans texte)'));
+    const images = (message.images || []).map((image) => ({ ...image, filename: filenameByUrl.get(image.url) })).filter((image) => image.filename);
+    if (images.length) {
+      lines.push('', 'Images rendues associées :');
+      images.forEach((image) => lines.push(`- ${image.alt} — \`${image.filename}\` (téléchargement explicite requis)`));
+    }
+    lines.push('');
+  });
+  return `${lines.join('\n')}\n`;
+}
+
 /**
  * Normalise un message rendu en un objet stable sans inventer les métadonnées absentes.
  * @param {object} raw Données extraites du DOM Teams.
@@ -43,6 +107,7 @@ export function normalizeMessage(raw = {}) {
     html: typeof raw.html === 'string' ? raw.html : '',
     text: toSafeText(raw.html),
     attachments: Array.isArray(raw.attachments) ? raw.attachments : [],
+    images: Array.isArray(raw.images) ? raw.images.filter((image) => image && typeof image.url === 'string').map((image) => ({ url: image.url, alt: typeof image.alt === 'string' ? image.alt : 'Image Teams' })) : [],
     quality
   };
 }

@@ -13,6 +13,16 @@
     const heading = document.querySelector('h1,[role="heading"][aria-level="1"],header [data-tid*="channel"]');
     return text(heading) || document.title || null;
   }
+  /** Retourne les images de contenu ou pièces jointes visuelles, jamais les avatars/réactions. */
+  function renderedImages(node) {
+    return [...node.querySelectorAll('[data-message-content] img[src], [data-tid="file-attachment-grid"] img[src]')].map((image) => {
+      const rawUrl = image.currentSrc || image.getAttribute('src');
+      try {
+        const url = new URL(rawUrl, document.baseURI);
+        return /^https?:$/.test(url.protocol) ? { url: url.href, alt: image.getAttribute('alt') || image.getAttribute('aria-label') || 'Image Teams' } : null;
+      } catch { return null; }
+    }).filter(Boolean);
+  }
   function collectVisible() {
     const label = channelLabel();
     const records = candidateNodes().map((node, index) => {
@@ -22,7 +32,7 @@
       const rawTimestamp = timeNode?.getAttribute('datetime') || text(timeNode);
       const createdAt = dom?.normalizeTeamsTimestamp(rawTimestamp) || rawTimestamp || null;
       const replyToId = node.getAttribute('data-reply-to-id') || null;
-      return { id, channelKey: label || 'unknown-channel', replyToId, author: text(authorNode), createdAt, html: node.innerHTML, domIndex: index };
+      return { id, channelKey: label || 'unknown-channel', replyToId, author: text(authorNode), createdAt, html: node.innerHTML, images: renderedImages(node), domIndex: index };
     });
     const warnings = [
       'visible-dom-only',
