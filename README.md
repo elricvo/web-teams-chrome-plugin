@@ -1,4 +1,4 @@
-# Teams Channel Archive — local
+<h1><img src="assets/icons/cloudseeders-logo.png" width="42" alt="" align="absmiddle"> Teams Channel Archive — local</h1>
 
 > Extension Chrome locale pour créer une **archive de consultation** à partir du contenu déjà rendu dans un canal Teams Web auquel tu as accès.
 
@@ -7,7 +7,7 @@
 
 ## État du projet
 
-**V1.0.1 — archive locale progressive, Markdown autonome et identité Cloudseeders.**
+**V1.0.2 — logo Cloudseeders seul dans le popup et en tête du README.**
 
 La V1.0 permet une capture locale du contenu rendu dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Après un clic explicite, une date de début obligatoire et la confirmation d’autorisation, elle peut faire remonter automatiquement le panneau de messages : chaque lot rendu est dédoublonné et sauvegardé localement avant la virtualisation suivante. Le Markdown isole strictement `[data-message-content]`, exclut contrôles et réactions, et intègre les images rendues sous forme Markdown locale avec leur horodatage ; elles deviennent visibles dans un lecteur Markdown après le téléchargement explicite correspondant. L’automatisation s’arrête à la date cible, au haut stable de l’historique, au plafond choisi, à la demande de l’utilisateur ou dès que la conversation devient ambiguë. Elle ne promet jamais une archive exhaustive et ne force pas l’ouverture des fils. Les décisions, l’architecture et limites sont documentées dans [la conception de collecte automatique](docs/AUTOMATED-HISTORY-COLLECTION.md).
 
