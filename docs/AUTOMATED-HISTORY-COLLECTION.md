@@ -82,6 +82,8 @@ Le manifeste exporté ajoute `historyCollection` lorsqu’une collecte automatiq
 
 `earliestObserved` et `latestObserved` décrivent ce que le DOM a rendu pendant le parcours. La plage exportée (`observedPeriod`) décrit seulement les messages retenus dans la période demandée. Cette distinction évite de confondre une carte de dépassement de borne avec un message inclus dans l’archive.
 
+Les images rendues sont représentées dans le Markdown par `![texte alternatif](teams-archive-images/.../image-XXX.ext)`, sur une ligne qui conserve l’horodatage du message. Elles deviennent affichables localement une fois l’action distincte **Télécharger les images rendues** exécutée ; avant cela, le lien local peut naturellement être absent.
+
 ## Limitations connues
 
 - Teams peut changer ses sélecteurs, sa virtualisation ou son comportement de scroll sans préavis.

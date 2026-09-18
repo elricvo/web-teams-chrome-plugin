@@ -54,6 +54,11 @@ export function buildImageDownloadPlan(messages = [], stamp = 'archive') {
   return plan;
 }
 
+/** Échappe le texte d’alternative afin qu’une image rendue ne puisse pas casser la syntaxe Markdown. */
+export function markdownImageAlt(value) {
+  return String(value ?? 'Image Teams').replace(/[\\\[\]\\]/g, '\\$&').replace(/\r?\n/g, ' ');
+}
+
 /** Construit une archive Markdown lisible sans insérer le HTML Teams non fiable. */
 export function buildMarkdownArchive({ channel = {}, requestedPeriod = {}, messages = [], replies = [], warnings = [] } = {}, stamp = new Date().toISOString().slice(0, 10)) {
   const all = [...messages, ...replies].slice().sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
@@ -79,7 +84,7 @@ export function buildMarkdownArchive({ channel = {}, requestedPeriod = {}, messa
     const images = (message.images || []).map((image) => ({ ...image, filename: filenameByUrl.get(image.url) })).filter((image) => image.filename);
     if (images.length) {
       lines.push('', 'Images rendues associées :');
-      images.forEach((image) => lines.push(`- ${message.createdAt || 'Date indisponible'} — ${image.alt} — \`${image.filename}\` (téléchargement explicite requis)`));
+      images.forEach((image) => lines.push(`- ${message.createdAt || 'Date indisponible'} — ![${markdownImageAlt(image.alt)}](${image.filename}) (téléchargement explicite requis)`));
     }
     lines.push('');
   });
