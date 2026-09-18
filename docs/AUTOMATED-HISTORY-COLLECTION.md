@@ -61,7 +61,7 @@ Popup (consentement, date cible, arrêt, statut)
 
 Le popup interroge périodiquement l’état local pour afficher le nombre de messages, le nombre de lots et la borne observée. Il peut être fermé pendant l’exécution : la boucle reste dans l’onglet Teams tant que Chrome, l’onglet et le script de contenu restent vivants. Si l’onglet est rechargé, fermé, suspendu ou si le navigateur s’arrête, la boucle ne peut pas continuer en arrière-plan. L’état déjà reçu est conservé dans `chrome.storage.session`, ou dans `chrome.storage.local` lorsque la persistance a été explicitement acceptée.
 
-La persistance n’est pas un mécanisme de reprise automatique : une reprise après rechargement de l’onglet demanderait un nouveau geste explicite et une requalification de la conversation. Ce choix évite de déplacer le scroll d’un onglet Teams que l’utilisateur n’est plus en train de contrôler.
+La commande **Effacer la session locale** interrompt aussi toute collecte de cet onglet, puis ramène le conteneur de conversation vers ses messages récents avant de supprimer le stockage. Ce retour est nécessaire pour qu’une nouvelle collecte reparte d’une fenêtre DOM récente plutôt que d’un point ancien atteint lors du parcours précédent. Si le conteneur ne peut pas être identifié, l’effacement reste effectif et le popup demande un retour manuel vers les messages récents.
 
 ## Données et manifeste
 

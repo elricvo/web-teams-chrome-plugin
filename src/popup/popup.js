@@ -150,11 +150,23 @@ async function downloadRenderedImages() {
   status(failed ? `${succeeded} image(s) téléchargée(s) dans teams-archive-images/${stamp}/ ; ${failed} échec(s) (lien expiré ou accès refusé).` : `${succeeded} image(s) téléchargée(s) dans teams-archive-images/${stamp}/.`);
 }
 
-/** Efface de manière explicite les sessions locales persistantes et temporaires. */
+async function resetTeamsHistoryPosition() {
+  try {
+    const tab = await activeTab();
+    await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['src/content/teams-dom-shapes.js', 'src/content/collector-content.js'] });
+    return await chrome.tabs.sendMessage(tab.id, { type: 'RESET_TEAMS_HISTORY_POSITION' });
+  } catch {
+    return null;
+  }
+}
+
+/** Efface de manière explicite les sessions locales persistantes et temporaires, puis revient aux messages récents. */
 async function erase() {
   if (historyPoll) { clearInterval(historyPoll); historyPoll = null; }
+  const reset = await resetTeamsHistoryPosition();
   await chrome.runtime.sendMessage({ type: 'ERASE_SESSION' });
-  session = null; setExportState(false); $('stop-history').disabled = true; $('collect-history').disabled = false; status('Session locale effacée.');
+  session = null; setExportState(false); $('stop-history').disabled = true; $('collect-history').disabled = false;
+  status(reset?.ok ? 'Session locale effacée ; conversation repositionnée sur les messages récents. Tu peux relancer la collecte.' : 'Session locale effacée. Reviens manuellement aux messages récents avant de relancer la collecte.');
 }
 
 $('capture').addEventListener('click', async () => { try { status('Capture du contenu actuellement rendu…'); await captureVisible(); } catch (error) { status(`Arrêt sûr : ${error.message}`); } });

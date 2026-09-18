@@ -7,7 +7,7 @@
 
 ## État du projet
 
-**V1.0.3 — logo Cloudseeders intégré dans l’en-tête des archives Markdown.**
+**V1.0.4 — effacement local suivi d’un retour sûr aux messages récents.**
 
 La V1.0 permet une capture locale du contenu rendu dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Après un clic explicite, une date de début obligatoire et la confirmation d’autorisation, elle peut faire remonter automatiquement le panneau de messages : chaque lot rendu est dédoublonné et sauvegardé localement avant la virtualisation suivante. Le Markdown isole strictement `[data-message-content]`, exclut contrôles et réactions, et intègre les images rendues sous forme Markdown locale avec leur horodatage ; elles deviennent visibles dans un lecteur Markdown après le téléchargement explicite correspondant. L’automatisation s’arrête à la date cible, au haut stable de l’historique, au plafond choisi, à la demande de l’utilisateur ou dès que la conversation devient ambiguë. Elle ne promet jamais une archive exhaustive et ne force pas l’ouverture des fils. Les décisions, l’architecture et limites sont documentées dans [la conception de collecte automatique](docs/AUTOMATED-HISTORY-COLLECTION.md).
 
@@ -98,7 +98,7 @@ Aucune installation `npm`, aucun build et aucun serveur ne sont nécessaires pou
 8. Clique sur **Exporter JSON + manifeste** pour le corpus structuré, ou **Exporter Markdown lisible** pour une lecture humaine.
 9. Pour une archive lisible et portable, clique **Sauvegarder Markdown + images** : Chrome crée sous son dossier de téléchargements un dossier `teams-archive-<horodatage>/`, avec le `.md` et `images/` ; les liens Markdown sont relatifs et les images s’affichent nativement après un téléchargement réussi. Les liens protégés/expirés restent signalés comme absents.
 10. Facultatif : clique séparément sur **Télécharger les images rendues** si tu préfères le répertoire d’images historique indépendant.
-11. Après usage, clique sur **Effacer la session locale**.
+11. Après usage, clique sur **Effacer la session locale** : la session est supprimée et l’extension ramène explicitement le panneau Teams vers les messages récents avant une nouvelle collecte. Si Teams ne permet pas d’identifier son panneau de conversation, le statut demande de revenir manuellement en bas du fil.
 
 ### Fichiers exportés
 

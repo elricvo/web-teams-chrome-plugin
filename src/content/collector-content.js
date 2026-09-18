@@ -93,9 +93,24 @@
       await finishHistory(run, 'error', 'history-run-error', ['history-run-error']);
     }
   }
+  async function resetHistoryPosition() {
+    if (historyRun) {
+      historyRun.stopRequested = true;
+      historyRun = null;
+    }
+    const scroller = historyScroller();
+    if (!scroller) return { ok: false, error: 'Conteneur de conversation non reconnu : retour manuel aux messages récents requis.' };
+    scroller.scrollTo({ top: scroller.scrollHeight, left: 0, behavior: 'auto' });
+    await wait(1000);
+    return { ok: true };
+  }
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === 'COLLECT_VISIBLE_TEAMS') {
       try { sendResponse({ ok: true, ...collectVisible() }); } catch (error) { sendResponse({ ok: false, error: String(error?.message || error) }); }
+      return true;
+    }
+    if (message?.type === 'RESET_TEAMS_HISTORY_POSITION') {
+      resetHistoryPosition().then(sendResponse).catch((error) => sendResponse({ ok: false, error: String(error?.message || error) }));
       return true;
     }
     if (message?.type === 'START_AUTO_HISTORY') {

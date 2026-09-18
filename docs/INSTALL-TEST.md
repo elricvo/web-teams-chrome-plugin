@@ -16,7 +16,7 @@
 4. Vérifier que l’interface ne promet pas un export complet : V1.0 capture le DOM rendu et conserve le statut `partial`.
 5. Exporter le JSON/manifeste et le Markdown, puis vérifier localement les compteurs, limitations et la lisibilité de la transcription.
 6. Si des images sont visibles, cliquer **Sauvegarder Markdown + images** et vérifier que Chrome place le `.md` et le sous-dossier `images/` sous le même dossier `teams-archive-<horodatage>/` ; ouvrir le Markdown local et vérifier l’affichage des images téléchargées. Vérifier que les vidéos ne sont jamais demandées.
-7. Cliquer « Effacer la session locale », fermer/réouvrir le popup et vérifier l’absence de session.
+7. Cliquer **Effacer la session locale**. Vérifier que le statut confirme le retour vers les messages récents, puis relancer la collecte avec la même période : les premiers lots ne doivent pas être vides simplement parce que le parcours précédent était resté sur l’historique ancien.
 
 ## Correctif V0.2.1 — texte Markdown nettoyé
 
