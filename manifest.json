@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Teams Channel Archive — local",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Archive locale de consultation du contenu rendu dans un canal Teams Web confirmé.",
   "action": { "default_title": "Archive Teams locale", "default_popup": "src/popup/popup.html" },
   "background": { "service_worker": "src/background/service-worker.js", "type": "module" },

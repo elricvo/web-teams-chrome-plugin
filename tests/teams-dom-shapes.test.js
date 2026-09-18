@@ -32,6 +32,17 @@ test('ne confond pas les aperçus de la barre latérale avec la conversation act
   assert.equal(messageNodes(root).length, 0);
 });
 
+test('extrait seulement le HTML du contenu du message, sans auteur ni réactions', () => {
+  const { messageContentHtml } = loadDomShapeHelpers();
+  const wrapper = { innerHTML: '<span>VANOVERBEKE, Eric</span><div data-message-content><p>Bonjour</p></div><div>1 réaction</div>', querySelector: (selector) => selector === '[data-message-content]' ? { innerHTML: '<p>Bonjour</p>' } : null };
+  assert.equal(messageContentHtml(wrapper), '<p>Bonjour</p>');
+});
+
+test('conserve un texte vide plutôt que les réactions lorsqu’un message n’a pas de contenu', () => {
+  const { messageContentHtml } = loadDomShapeHelpers();
+  assert.equal(messageContentHtml({ innerHTML: '<div>1 réaction</div>', querySelector: () => null }), '');
+});
+
 test('convertit une date Teams française DD/MM/YYYY HH:mm sans inversion mois/jour', () => {
   const { normalizeTeamsTimestamp } = loadDomShapeHelpers();
   assert.equal(normalizeTeamsTimestamp('09/11/2026 14:54'), '2026-11-09T14:54:00');

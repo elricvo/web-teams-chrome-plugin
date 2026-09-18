@@ -18,6 +18,10 @@
 6. Si des images sont visibles, cliquer séparément sur « Télécharger les images rendues » et vérifier que Chrome les place sous `teams-archive-images/YYYY-MM-DD/` ; vérifier que les vidéos ne sont pas demandées.
 7. Cliquer « Effacer la session locale », fermer/réouvrir le popup et vérifier l’absence de session.
 
+## Correctif V0.2.1 — texte Markdown nettoyé
+
+La transcription Markdown n’utilise plus le HTML complet de la carte Teams. Elle isole le conteneur `[data-message-content]` : l’auteur, l’heure d’interface, les contrôles et les réactions sont donc exclus du texte. Les images visibles restent recensées et téléchargeables sur action explicite.
+
 ## Correctif V0.1.1 — conversations Microsoft 365
 
 Le correctif V0.1.1 traite le cas constaté dans une conversation ouverte sur `teams.microsoft.com` : Teams y affiche les messages actifs avec `message-wrapper` / `message-body-*`, tandis que les `comfy-message-wrapper` sont des aperçus de la barre latérale. L’ancienne version capturait ces aperçus sans date exploitable, puis le filtre de période produisait un export vide.

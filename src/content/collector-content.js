@@ -32,7 +32,8 @@
       const rawTimestamp = timeNode?.getAttribute('datetime') || text(timeNode);
       const createdAt = dom?.normalizeTeamsTimestamp(rawTimestamp) || rawTimestamp || null;
       const replyToId = node.getAttribute('data-reply-to-id') || null;
-      return { id, channelKey: label || 'unknown-channel', replyToId, author: text(authorNode), createdAt, html: node.innerHTML, images: renderedImages(node), domIndex: index };
+      const html = dom?.messageContentHtml ? dom.messageContentHtml(node) : '';
+      return { id, channelKey: label || 'unknown-channel', replyToId, author: text(authorNode), createdAt, html, images: renderedImages(node), domIndex: index };
     });
     const warnings = [
       'visible-dom-only',

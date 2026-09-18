@@ -7,9 +7,9 @@
 
 ## État du projet
 
-**V0.2.0 — capture visible, export Markdown et téléchargement explicite des images rendues.**
+**V0.2.1 — export Markdown centré sur le texte, sans métadonnées ni réactions.**
 
-La V0.2.0 permet une capture locale des éléments **actuellement rendus** dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Une qualification Teams Free du 17 septembre 2026 a confirmé l’export de 10 messages rendus sur 10 attendus. Le correctif du 18 septembre cible, y compris sur `teams.microsoft.com`, les vraies cartes de conversation `message-wrapper` avec un corps `message-body-*`, au lieu des aperçus de navigation `comfy-message-wrapper` qui provoquaient un export vide après filtrage de période. Le Markdown utilise du texte cité, pas le HTML Teams ; les images sont téléchargées seulement depuis des URL HTTP(S) déjà rendues et uniquement par clic explicite. Les détails et limites sont dans [la note de compatibilité](docs/COMPATIBILITY.md).
+La V0.2.1 permet une capture locale des éléments **actuellement rendus** dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Le Markdown isole maintenant strictement `[data-message-content]` : noms répétés, heures d’interface, contrôles et réactions sont exclus du texte, tandis que les images rendues restent conservées. Une qualification Teams Free du 17 septembre 2026 a confirmé l’export de 10 messages rendus sur 10 attendus. Le correctif du 18 septembre cible, y compris sur `teams.microsoft.com`, les vraies cartes de conversation `message-wrapper` avec un corps `message-body-*`, au lieu des aperçus de navigation `comfy-message-wrapper` qui provoquaient un export vide après filtrage de période. Le Markdown utilise du texte cité, pas le HTML Teams ; les images sont téléchargées seulement depuis des URL HTTP(S) déjà rendues et uniquement par clic explicite. Les détails et limites sont dans [la note de compatibilité](docs/COMPATIBILITY.md).
 
 Elle ne réalise pas encore la remontée automatisée de deux ans d’historique ni l’ouverture systématique des fils ; ces fonctions restent à qualifier et implémenter.
 

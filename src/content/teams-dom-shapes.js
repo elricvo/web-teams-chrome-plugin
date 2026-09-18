@@ -16,6 +16,11 @@
     return [...root.querySelectorAll(messageSelector())].filter((node) => Boolean(node.querySelector?.('[id^="message-body-"]')));
   }
 
+  /** Isole le contenu rédactionnel et exclut métadonnées, contrôles et réactions. */
+  function messageContentHtml(wrapper) {
+    return wrapper?.querySelector?.('[data-message-content]')?.innerHTML || '';
+  }
+
   /** Normalise uniquement les formats de date observés ; ne devine pas les dates relatives. */
   function normalizeTeamsTimestamp(value) {
     if (typeof value !== 'string') return null;
@@ -37,5 +42,5 @@
     return id || null;
   }
 
-  globalThis.TeamsArchiveDom = { messageSelector, messageNodes, normalizeTeamsTimestamp, messageId };
+  globalThis.TeamsArchiveDom = { messageSelector, messageNodes, messageContentHtml, normalizeTeamsTimestamp, messageId };
 })();
