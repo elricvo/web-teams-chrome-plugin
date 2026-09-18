@@ -1,4 +1,4 @@
-import { normalizeMessage, deduplicateMessages, isInPeriod, buildManifest, buildMarkdownArchive, buildImageDownloadPlan } from '../shared/archive-core.js';
+import { normalizeMessage, deduplicateMessages, isInPeriod, buildManifest, buildMarkdownArchive, buildImageDownloadPlan, buildMarkdownBundle } from '../shared/archive-core.js';
 import { extractRenderedRecords, buildSessionSummary } from '../collector/teams-adapter.js';
 import { isSupportedTeamsUrl } from '../shared/teams-hosts.js';
 
@@ -19,6 +19,7 @@ async function activeTab() {
 function setExportState(enabled) {
   $('export').disabled = !enabled;
   $('export-markdown').disabled = !enabled;
+  $('save-markdown-bundle').disabled = !enabled;
   $('download-images').disabled = !enabled;
 }
 
@@ -118,6 +119,20 @@ async function exportMarkdown() {
   status('Export Markdown demandé : vérifie la destination choisie par Chrome.');
 }
 
+/** Sauvegarde en un clic un dossier Markdown autonome : document et images sont placés ensemble dans Téléchargements. */
+async function saveMarkdownBundle() {
+  if (!session) throw new Error('Aucune session à exporter.');
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const bundle = buildMarkdownBundle(session, stamp);
+  const markdownUrl = `data:text/markdown;charset=utf-8,${encodeURIComponent(bundle.markdown)}`;
+  await chrome.downloads.download({ url: markdownUrl, filename: bundle.markdownFilename, conflictAction: 'uniquify', saveAs: false });
+  const results = await Promise.allSettled(bundle.imagePlan.map((image) => chrome.downloads.download({ url: image.url, filename: image.filename, conflictAction: 'uniquify', saveAs: false })));
+  const succeeded = results.filter((result) => result.status === 'fulfilled').length;
+  const failed = results.length - succeeded;
+  const location = `${bundle.archiveDirectory}/`;
+  status(failed ? `Archive Markdown sauvegardée dans ${location} : ${succeeded} image(s) enregistrée(s), ${failed} image(s) indisponible(s). Les liens correspondants resteront absents.` : `Archive Markdown autonome sauvegardée dans ${location} avec ${succeeded} image(s).`);
+}
+
 /** Télécharge seulement les images HTTP(S) déjà rendues, après un clic explicite. */
 async function downloadRenderedImages() {
   if (!session) throw new Error('Aucune session à exporter.');
@@ -147,6 +162,7 @@ $('collect-history').addEventListener('click', async () => { try { await collect
 $('stop-history').addEventListener('click', async () => { try { await stopHistoryCollection(); } catch (error) { status(`Arrêt non réalisé : ${error.message}`); } });
 $('export').addEventListener('click', async () => { try { await exportArchive(); } catch (error) { status(`Export JSON non réalisé : ${error.message}`); } });
 $('export-markdown').addEventListener('click', async () => { try { await exportMarkdown(); } catch (error) { status(`Export Markdown non réalisé : ${error.message}`); } });
+$('save-markdown-bundle').addEventListener('click', async () => { try { await saveMarkdownBundle(); } catch (error) { status(`Archive Markdown + images non sauvegardée : ${error.message}`); } });
 $('download-images').addEventListener('click', async () => { try { await downloadRenderedImages(); } catch (error) { status(`Téléchargement des images non réalisé : ${error.message}`); } });
 $('erase').addEventListener('click', erase);
 refreshHistoryState().catch(() => {});

@@ -42,14 +42,14 @@ export function imageFilename(url, index) {
  * Prépare les images HTTP(S) déjà rendues pour un téléchargement explicitement demandé.
  * Les données `blob:`, `data:` et les vidéos sont hors périmètre.
  */
-export function buildImageDownloadPlan(messages = [], stamp = 'archive') {
+export function buildImageDownloadPlan(messages = [], stamp = 'archive', directory = `teams-archive-images/${stamp}`) {
   const seen = new Set();
   const plan = [];
   messages.forEach((message) => (message.images || []).forEach((image) => {
     const url = image?.url;
     if (typeof url !== 'string' || !/^https?:\/\//i.test(url) || seen.has(url)) return;
     seen.add(url);
-    plan.push({ url, alt: String(image.alt || 'Image Teams'), filename: `teams-archive-images/${stamp}/${imageFilename(url, plan.length)}` });
+    plan.push({ url, alt: String(image.alt || 'Image Teams'), filename: `${directory}/${imageFilename(url, plan.length)}` });
   }));
   return plan;
 }
@@ -60,10 +60,10 @@ export function markdownImageAlt(value) {
 }
 
 /** Construit une archive Markdown lisible sans insérer le HTML Teams non fiable. */
-export function buildMarkdownArchive({ channel = {}, requestedPeriod = {}, messages = [], replies = [], warnings = [] } = {}, stamp = new Date().toISOString().slice(0, 10)) {
+export function buildMarkdownArchive({ channel = {}, requestedPeriod = {}, messages = [], replies = [], warnings = [] } = {}, stamp = new Date().toISOString().slice(0, 10), { imageDirectory = `teams-archive-images/${stamp}`, imageReferenceDirectory = imageDirectory } = {}) {
   const all = [...messages, ...replies].slice().sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
-  const imagePlan = buildImageDownloadPlan(all, stamp);
-  const filenameByUrl = new Map(imagePlan.map((image) => [image.url, image.filename]));
+  const imagePlan = buildImageDownloadPlan(all, stamp, imageDirectory);
+  const filenameByUrl = new Map(imagePlan.map((image) => [image.url, `${imageReferenceDirectory}/${image.filename.split('/').at(-1)}`]));
   const lines = [
     '# Archive Teams — consultation locale',
     '',
@@ -89,6 +89,19 @@ export function buildMarkdownArchive({ channel = {}, requestedPeriod = {}, messa
     lines.push('');
   });
   return `${lines.join('\n')}\n`;
+}
+
+/** Prépare un dossier local : le Markdown et ses images utilisent des chemins relatifs. */
+export function buildMarkdownBundle(session = {}, stamp = new Date().toISOString().slice(0, 10)) {
+  const archiveDirectory = `teams-archive-${stamp}`;
+  const imageDirectory = `${archiveDirectory}/images`;
+  const all = [...(session.messages || []), ...(session.replies || [])];
+  return {
+    archiveDirectory,
+    markdownFilename: `${archiveDirectory}/teams-archive-${stamp}.md`,
+    imagePlan: buildImageDownloadPlan(all, stamp, imageDirectory),
+    markdown: buildMarkdownArchive(session, stamp, { imageDirectory, imageReferenceDirectory: 'images' })
+  };
 }
 
 /**

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeMessage, deduplicateMessages, isInPeriod, buildManifest, toSafeText, buildImageDownloadPlan, buildMarkdownArchive } from '../src/shared/archive-core.js';
+import { normalizeMessage, deduplicateMessages, isInPeriod, buildManifest, toSafeText, buildImageDownloadPlan, buildMarkdownArchive, buildMarkdownBundle } from '../src/shared/archive-core.js';
 
 test('normalise un message en texte sûr sans exécuter son HTML', () => {
   const result = normalizeMessage({ id: 'm-1', author: 'Ada', createdAt: '2026-01-05T10:00:00Z', html: '<p>Bonjour <b>équipe</b><script>alert(1)</script></p>' });
@@ -77,4 +77,13 @@ test('génère un Markdown chronologique lisible sans rendre le texte archivé a
   assert.match(markdown, /### 1\. Ada — 2026-09-18T10:00:00Z/);
   assert.match(markdown, /> # Faux titre/);
   assert.match(markdown, /2026-09-18T10:00:00Z — !\[Plan\]\(teams-archive-images\/2026-09-18\/image-001\.webp\) \(téléchargement explicite requis\)/);
+});
+
+test('prépare un dossier Markdown autonome dont les images sont référencées relativement', () => {
+  const bundle = buildMarkdownBundle({
+    channel: { channel: 'Conversation test' }, messages: [{ author: 'Ada', createdAt: '2026-09-18T10:00:00Z', images: [{ url: 'https://cdn.example.test/plan.png', alt: 'Plan' }] }]
+  }, '2026-09-18');
+  assert.equal(bundle.markdownFilename, 'teams-archive-2026-09-18/teams-archive-2026-09-18.md');
+  assert.deepEqual(bundle.imagePlan, [{ url: 'https://cdn.example.test/plan.png', alt: 'Plan', filename: 'teams-archive-2026-09-18/images/image-001.png' }]);
+  assert.match(bundle.markdown, /!\[Plan\]\(images\/image-001\.png\)/);
 });

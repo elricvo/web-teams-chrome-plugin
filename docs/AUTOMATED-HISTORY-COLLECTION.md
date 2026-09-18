@@ -84,6 +84,8 @@ Le manifeste exporté ajoute `historyCollection` lorsqu’une collecte automatiq
 
 Les images rendues sont représentées dans le Markdown par `![texte alternatif](teams-archive-images/.../image-XXX.ext)`, sur une ligne qui conserve l’horodatage du message. Elles deviennent affichables localement une fois l’action distincte **Télécharger les images rendues** exécutée ; avant cela, le lien local peut naturellement être absent.
 
+L’option **Sauvegarder Markdown + images** crée, en un seul geste explicite, un dossier `teams-archive-<horodatage>/` sous le dossier de téléchargements configuré dans Chrome. Il contient le fichier `.md` et `images/`; le Markdown emploie alors les chemins relatifs `images/image-XXX.ext`. Cette option ne télécharge toujours que les images HTTP(S) déjà rendues. Les échecs (lien Teams expiré ou protégé) sont comptés dans le statut ; le Markdown reste créé mais l’image concernée ne pourra pas s’afficher.
+
 ## Limitations connues
 
 - Teams peut changer ses sélecteurs, sa virtualisation ou son comportement de scroll sans préavis.

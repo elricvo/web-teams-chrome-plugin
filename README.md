@@ -7,7 +7,7 @@
 
 ## État du projet
 
-**V0.3.0 — collecte automatique progressive de l’historique Teams Web.**
+**V0.3.2 — sauvegarde autonome Markdown + images dans un même dossier local.**
 
 La V0.3.0 permet une capture locale du contenu rendu dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Après un clic explicite, une date de début obligatoire et la confirmation d’autorisation, elle peut faire remonter automatiquement le panneau de messages : chaque lot rendu est dédoublonné et sauvegardé localement avant la virtualisation suivante. Le Markdown isole strictement `[data-message-content]`, exclut contrôles et réactions, et intègre les images rendues sous forme Markdown locale avec leur horodatage ; elles deviennent visibles dans un lecteur Markdown après le téléchargement explicite correspondant. L’automatisation s’arrête à la date cible, au haut stable de l’historique, au plafond choisi, à la demande de l’utilisateur ou dès que la conversation devient ambiguë. Elle ne promet jamais une archive exhaustive et ne force pas l’ouverture des fils. Les décisions, l’architecture et limites sont documentées dans [la conception de collecte automatique](docs/AUTOMATED-HISTORY-COLLECTION.md).
 
@@ -23,7 +23,7 @@ La V0.3.0 permet une capture locale du contenu rendu dans un canal Teams Web act
 - normalise le contenu, dédoublonne les messages, applique une période de consultation et signale les données incomplètes ;
 - conserve les données dans la session du navigateur, ou dans le stockage local de l’extension si l’utilisateur coche explicitement cette option ;
 - exporte un JSON brut, un `manifest.json` et une transcription Markdown lisible expliquant le périmètre, les compteurs et les limites ;
-- peut télécharger, après un clic distinct et explicite, les images HTTP(S) déjà rendues dans le contenu ou les aperçus de pièce jointe ;
+- peut sauvegarder en un clic un dossier autonome dans les téléchargements Chrome : le Markdown et le sous-dossier `images/` utilisent des liens relatifs, pour un affichage natif après téléchargement ;
 - permet l’effacement explicite des données locales.
 
 ## Ce que l’extension ne fait pas
@@ -95,15 +95,16 @@ Aucune installation `npm`, aucun build et aucun serveur ne sont nécessaires pou
 6. Pour la seule vue actuelle, clique **Capturer les éléments actuellement rendus** ; pour remonter l’historique sans manipuler le fil, clique **Collecter l’historique automatiquement** et laisse l’onglet Teams ouvert.
 7. Lis le statut, le motif d’arrêt et les limites affichées. L’état `partial` reste normal, y compris quand la date cible est atteinte.
 8. Clique sur **Exporter JSON + manifeste** pour le corpus structuré, ou **Exporter Markdown lisible** pour une lecture humaine.
-9. Facultatif : clique séparément sur **Télécharger les images rendues**. Seules les balises d’image HTTP(S) déjà visibles dans le contenu ou les aperçus de pièce jointe sont demandées à Chrome ; les vidéos, `blob:` et `data:` sont ignorés. Les fichiers sont placés dans `teams-archive-images/YYYY-MM-DD/` sous le dossier de téléchargement Chrome et les liens peuvent échouer s’ils ont expiré ou exigent un accès non disponible au téléchargement.
-10. Après usage, clique sur **Effacer la session locale**.
+9. Pour une archive lisible et portable, clique **Sauvegarder Markdown + images** : Chrome crée sous son dossier de téléchargements un dossier `teams-archive-<horodatage>/`, avec le `.md` et `images/` ; les liens Markdown sont relatifs et les images s’affichent nativement après un téléchargement réussi. Les liens protégés/expirés restent signalés comme absents.
+10. Facultatif : clique séparément sur **Télécharger les images rendues** si tu préfères le répertoire d’images historique indépendant.
+11. Après usage, clique sur **Effacer la session locale**.
 
 ### Fichiers exportés
 
 | Fichier | Contenu | Usage |
 |---|---|---|
 | `teams-archive-YYYY-MM-DD.json` | Messages/réponses capturés et métadonnées de session | Transformation et analyse locale ultérieures |
-| `teams-archive-YYYY-MM-DD.md` | Transcription chronologique lisible, avec les messages cités | Lecture humaine, Obsidian ou traitement Markdown local |
+| `teams-archive-<horodatage>/teams-archive-<horodatage>.md` + `images/` | Dossier Markdown autonome : le document référence `images/image-XXX.ext` relativement | Lecture native dans Obsidian ou un lecteur Markdown, après téléchargement réussi des images |
 | `teams-archive-images/YYYY-MM-DD/` | Images HTTP(S) rendues, téléchargées seulement à la demande | Références locales mentionnées dans le Markdown ; absence possible en cas de lien expiré/refusé |
 | `teams-archive-YYYY-MM-DD-manifest.json` | Canal, période, compteurs, erreurs, bornes observées, limites | Lire la couverture et ne pas surinterpréter l’archive |
 
