@@ -1,3 +1,5 @@
+import { cloudseedersLogoDataUrl } from './cloudseeders-logo-data.js';
+
 /* Fonctions pures de normalisation et d’export du contenu Teams rendu dans le DOM. */
 
 /**
@@ -65,7 +67,7 @@ export function buildMarkdownArchive({ channel = {}, requestedPeriod = {}, messa
   const imagePlan = buildImageDownloadPlan(all, stamp, imageDirectory);
   const filenameByUrl = new Map(imagePlan.map((image) => [image.url, `${imageReferenceDirectory}/${image.filename.split('/').at(-1)}`]));
   const lines = [
-    '# Archive Teams — consultation locale',
+    `<h1><img src="${cloudseedersLogoDataUrl}" width="40" alt=""> Archive Teams — consultation locale</h1>`,
     '',
     '> Ce document est dérivé du contenu rendu dans Teams Web. Il ne constitue pas un export officiel ni une preuve d’exhaustivité.',
     '',

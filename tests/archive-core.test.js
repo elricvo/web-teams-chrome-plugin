@@ -73,7 +73,7 @@ test('génère un Markdown chronologique lisible sans rendre le texte archivé a
     messages: [{ author: 'Ada', createdAt: '2026-09-18T10:00:00Z', text: '# Faux titre\nBonjour', images: [{ url: 'https://cdn.example.test/plan.webp', alt: 'Plan' }] }],
     warnings: ['visible-dom-only']
   }, '2026-09-18');
-  assert.match(markdown, /# Archive Teams/);
+  assert.match(markdown, /<h1><img src="data:image\/png;base64,[A-Za-z0-9+/=]+" width="40" alt=""> Archive Teams — consultation locale<\/h1>/);
   assert.match(markdown, /### 1\. Ada — 2026-09-18T10:00:00Z/);
   assert.match(markdown, /> # Faux titre/);
   assert.match(markdown, /2026-09-18T10:00:00Z — !\[Plan\]\(teams-archive-images\/2026-09-18\/image-001\.webp\) \(téléchargement explicite requis\)/);

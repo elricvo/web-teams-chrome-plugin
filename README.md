@@ -7,7 +7,7 @@
 
 ## État du projet
 
-**V1.0.2 — logo Cloudseeders seul dans le popup et en tête du README.**
+**V1.0.3 — logo Cloudseeders intégré dans l’en-tête des archives Markdown.**
 
 La V1.0 permet une capture locale du contenu rendu dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Après un clic explicite, une date de début obligatoire et la confirmation d’autorisation, elle peut faire remonter automatiquement le panneau de messages : chaque lot rendu est dédoublonné et sauvegardé localement avant la virtualisation suivante. Le Markdown isole strictement `[data-message-content]`, exclut contrôles et réactions, et intègre les images rendues sous forme Markdown locale avec leur horodatage ; elles deviennent visibles dans un lecteur Markdown après le téléchargement explicite correspondant. L’automatisation s’arrête à la date cible, au haut stable de l’historique, au plafond choisi, à la demande de l’utilisateur ou dès que la conversation devient ambiguë. Elle ne promet jamais une archive exhaustive et ne force pas l’ouverture des fils. Les décisions, l’architecture et limites sont documentées dans [la conception de collecte automatique](docs/AUTOMATED-HISTORY-COLLECTION.md).
 
@@ -24,6 +24,7 @@ La V1.0 permet une capture locale du contenu rendu dans un canal Teams Web actif
 - conserve les données dans la session du navigateur, ou dans le stockage local de l’extension si l’utilisateur coche explicitement cette option ;
 - exporte un JSON brut, un `manifest.json` et une transcription Markdown lisible expliquant le périmètre, les compteurs et les limites ;
 - peut sauvegarder en un clic un dossier autonome dans les téléchargements Chrome : le Markdown et le sous-dossier `images/` utilisent des liens relatifs, pour un affichage natif après téléchargement ;
+- le document Markdown embarque le logo Cloudseeders sous forme d’image locale encodée, à gauche du titre : il est donc visible même si le fichier Markdown est déplacé seul ;
 - permet l’effacement explicite des données locales.
 
 ## Ce que l’extension ne fait pas
