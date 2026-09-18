@@ -20,7 +20,7 @@
 
 ## Correctif V0.2.1 — texte Markdown nettoyé
 
-La transcription Markdown n’utilise plus le HTML complet de la carte Teams. Elle isole le conteneur `[data-message-content]` : l’auteur, l’heure d’interface, les contrôles et les réactions sont donc exclus du texte. Les images visibles restent recensées et téléchargeables sur action explicite.
+La transcription Markdown n’utilise plus le HTML complet de la carte Teams. Elle isole le conteneur `[data-message-content]` : l’auteur, l’heure d’interface, les contrôles et les réactions sont donc exclus du texte. Les images visibles restent recensées et téléchargeables sur action explicite ; chaque référence inclut aussi l’horodatage ISO du message source.
 
 ## Correctif V0.1.1 — conversations Microsoft 365
 

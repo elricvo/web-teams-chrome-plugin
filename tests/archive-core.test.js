@@ -67,5 +67,5 @@ test('génère un Markdown chronologique lisible sans rendre le texte archivé a
   assert.match(markdown, /# Archive Teams/);
   assert.match(markdown, /### 1\. Ada — 2026-09-18T10:00:00Z/);
   assert.match(markdown, /> # Faux titre/);
-  assert.match(markdown, /teams-archive-images\/2026-09-18\/image-001\.webp/);
+  assert.match(markdown, /2026-09-18T10:00:00Z — Plan — `teams-archive-images\/2026-09-18\/image-001\.webp`/);
 });

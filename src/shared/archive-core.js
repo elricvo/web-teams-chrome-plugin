@@ -79,7 +79,7 @@ export function buildMarkdownArchive({ channel = {}, requestedPeriod = {}, messa
     const images = (message.images || []).map((image) => ({ ...image, filename: filenameByUrl.get(image.url) })).filter((image) => image.filename);
     if (images.length) {
       lines.push('', 'Images rendues associées :');
-      images.forEach((image) => lines.push(`- ${image.alt} — \`${image.filename}\` (téléchargement explicite requis)`));
+      images.forEach((image) => lines.push(`- ${message.createdAt || 'Date indisponible'} — ${image.alt} — \`${image.filename}\` (téléchargement explicite requis)`));
     }
     lines.push('');
   });
