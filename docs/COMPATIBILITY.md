@@ -28,6 +28,12 @@ Le premier essai avait exporté un unique élément de rail de navigation (`48:n
 
 Sur le MHTML privé fourni pour la conversation Microsoft 365, cette règle identifie **43 cartes de conversation**, toutes avec un `message-body-*` et un `time[datetime]` ISO. Cela qualifie le sélecteur et les métadonnées sur l’instantané ; la validation dans Chrome reste requise avant de conclure à une exportation réelle.
 
+## Collecte automatique V0.3 — implémentée, qualification Chrome requise
+
+La V0.3 exécute un scroll progressif uniquement après consentement explicite, date cible et clic utilisateur. Elle archive chaque lot visible, dédoublonne localement et s’arrête sur une borne observée, un haut stable, un plafond, une demande d’arrêt ou un changement de conversation. Les sélecteurs de conteneur tentés sont `message-pane-list-viewport`, `message-pane-body` et un journal accessible ; l’absence de conteneur provoque un arrêt sûr.
+
+Cette mécanique a des tests unitaires déterministes pour ses décisions de borne, stagnation, plafond et dédoublonnage. **Elle n’a pas encore été qualifiée dans une session Teams Web interactive depuis cet environnement.** La procédure obligatoire figure dans [AUTOMATED-HISTORY-COLLECTION.md](AUTOMATED-HISTORY-COLLECTION.md) ; conserver `partial` jusqu’à sa réalisation sur un corpus de test autorisé.
+
 ## Limites non levées
 
 Cette qualification ne valide pas :

@@ -7,11 +7,9 @@
 
 ## État du projet
 
-**V0.2.2 — chaque référence d’image conserve son horodatage source.**
+**V0.3.0 — collecte automatique progressive de l’historique Teams Web.**
 
-La V0.2.2 permet une capture locale des éléments **actuellement rendus** dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Le Markdown isole strictement `[data-message-content]` : noms répétés, heures d’interface, contrôles et réactions sont exclus du texte, tandis que les images rendues restent conservées. Chaque référence d’image contient aussi son propre horodatage source, afin que les messages visuels restent traçables même sans texte. Une qualification Teams Free du 17 septembre 2026 a confirmé l’export de 10 messages rendus sur 10 attendus. Le correctif du 18 septembre cible, y compris sur `teams.microsoft.com`, les vraies cartes de conversation `message-wrapper` avec un corps `message-body-*`, au lieu des aperçus de navigation `comfy-message-wrapper` qui provoquaient un export vide après filtrage de période. Le Markdown utilise du texte cité, pas le HTML Teams ; les images sont téléchargées seulement depuis des URL HTTP(S) déjà rendues et uniquement par clic explicite. Les détails et limites sont dans [la note de compatibilité](docs/COMPATIBILITY.md).
-
-Elle ne réalise pas encore la remontée automatisée de deux ans d’historique ni l’ouverture systématique des fils ; ces fonctions restent à qualifier et implémenter.
+La V0.3.0 permet une capture locale du contenu rendu dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec exports JSON, Markdown et manifeste de couverture. Après un clic explicite, une date de début obligatoire et la confirmation d’autorisation, elle peut faire remonter automatiquement le panneau de messages : chaque lot rendu est dédoublonné et sauvegardé localement avant la virtualisation suivante. Le Markdown isole strictement `[data-message-content]`, exclut contrôles et réactions, et préserve les images rendues avec leur horodatage. L’automatisation s’arrête à la date cible, au haut stable de l’historique, au plafond choisi, à la demande de l’utilisateur ou dès que la conversation devient ambiguë. Elle ne promet jamais une archive exhaustive et ne force pas l’ouverture des fils. Les décisions, l’architecture et limites sont documentées dans [la conception de collecte automatique](docs/AUTOMATED-HISTORY-COLLECTION.md).
 
 > [!WARNING]
 > Cette extension n’est pas un export Microsoft Purview/eDiscovery, ne contourne aucun droit Teams, et ne doit jamais être présentée comme une archive intégrale ou juridiquement probante.
@@ -21,6 +19,7 @@ Elle ne réalise pas encore la remontée automatisée de deux ans d’historique
 - agit uniquement après un clic explicite dans l’onglet Teams Web actif ;
 - demande à l’utilisateur de confirmer qu’il est autorisé à archiver le canal ;
 - collecte les éléments que Teams a déjà rendus dans le navigateur ;
+- après un clic distinct et une date cible, peut remonter automatiquement le panneau Teams à cadence limitée, en mémorisant chaque lot rendu avant virtualisation ;
 - normalise le contenu, dédoublonne les messages, applique une période de consultation et signale les données incomplètes ;
 - conserve les données dans la session du navigateur, ou dans le stockage local de l’extension si l’utilisateur coche explicitement cette option ;
 - exporte un JSON brut, un `manifest.json` et une transcription Markdown lisible expliquant le périmètre, les compteurs et les limites ;
@@ -35,7 +34,8 @@ Elle ne réalise pas encore la remontée automatisée de deux ans d’historique
 - n’envoie pas les messages à un serveur, une IA, un analytics ou un tiers ;
 - ne télécharge pas les pièces jointes génériques ni les vidéos ; seules les images déjà rendues sont éligibles après clic explicite ;
 - ne récupère pas les messages supprimés, purgés ou invisibles pour le compte connecté ;
-- ne promet pas une couverture exhaustive.
+- ne promet pas une couverture exhaustive ;
+- n’ouvre pas systématiquement les fils ni les réponses que Teams ne rend pas déjà.
 
 ## Schéma
 
@@ -67,7 +67,7 @@ L’extension reste entièrement dans le navigateur. Le seul contenu qui sort es
 - Chrome ou Chromium récent ;
 - un compte autorisé à consulter le canal Teams cible ;
 - Teams ouvert dans le navigateur, sur `teams.microsoft.com`, `teams.cloud.microsoft` ou `teams.live.com` ;
-- pour Teams Free (`teams.live.com`), l’extension prend en charge les conversations personnelles rendues ; la capture visible a été qualifiée sur un jeu de test local. Les longs historiques et les fils restent hors périmètre V0.1.
+- pour Teams Free (`teams.live.com`), l’extension prend en charge les conversations personnelles rendues ; les sélecteurs de scroll long restent à qualifier sur chaque interface Teams cible.
 
 ### Charger l’extension depuis le dépôt cloné
 
@@ -83,17 +83,17 @@ L’extension reste entièrement dans le navigateur. Le seul contenu qui sort es
 5. Sélectionne le dossier racine cloné : `web-teams-chrome-plugin/`.
 6. Épingle l’icône **Teams Channel Archive — local** dans la barre d’outils du navigateur.
 
-Aucune installation `npm`, aucun build et aucun serveur ne sont nécessaires pour charger la V0.1.
+Aucune installation `npm`, aucun build et aucun serveur ne sont nécessaires pour charger l’extension.
 
-## Utilisation V0.1
+## Utilisation V0.3
 
 1. Dans Teams Web, ouvre **le canal précis** que tu es autorisé à archiver.
 2. Vérifie visuellement le Team et le canal avant toute action.
 3. Ouvre l’extension depuis la barre d’outils.
 4. Lis l’avertissement puis coche : « Je confirme être autorisé à archiver ce canal ».
-5. Facultatif : choisis une période de consultation et coche la persistance locale si tu souhaites conserver temporairement la session après fermeture.
-6. Clique sur **Capturer les éléments actuellement rendus**.
-7. Lis le statut et les limites affichées. En V0.1, il est normal qu’un état `partial` soit signalé.
+5. Renseigne la date **Du** pour la collecte automatique ; choisis facultativement une date de fin, la persistance locale et un plafond de lots.
+6. Pour la seule vue actuelle, clique **Capturer les éléments actuellement rendus** ; pour remonter l’historique sans manipuler le fil, clique **Collecter l’historique automatiquement** et laisse l’onglet Teams ouvert.
+7. Lis le statut, le motif d’arrêt et les limites affichées. L’état `partial` reste normal, y compris quand la date cible est atteinte.
 8. Clique sur **Exporter JSON + manifeste** pour le corpus structuré, ou **Exporter Markdown lisible** pour une lecture humaine.
 9. Facultatif : clique séparément sur **Télécharger les images rendues**. Seules les balises d’image HTTP(S) déjà visibles dans le contenu ou les aperçus de pièce jointe sont demandées à Chrome ; les vidéos, `blob:` et `data:` sont ignorés. Les fichiers sont placés dans `teams-archive-images/YYYY-MM-DD/` sous le dossier de téléchargement Chrome et les liens peuvent échouer s’ils ont expiré ou exigent un accès non disponible au téléchargement.
 10. Après usage, clique sur **Effacer la session locale**.
@@ -127,6 +127,7 @@ Les tests unitaires couvrent notamment :
 - [Spécification fonctionnelle](docs/specs/001-local-teams-channel-archive/spec.md)
 - [Plan technique](docs/specs/001-local-teams-channel-archive/plan.md)
 - [Recherche et décisions](docs/specs/001-local-teams-channel-archive/research.md)
+- [Conception de la collecte automatique](docs/AUTOMATED-HISTORY-COLLECTION.md)
 - [Plan de contrôle](docs/CONTROL-PLAN.md)
 - [Compatibilité et résultat de qualification](docs/COMPATIBILITY.md)
 - [Protocole d’installation et de test](docs/INSTALL-TEST.md)

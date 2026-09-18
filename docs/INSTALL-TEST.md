@@ -47,9 +47,24 @@ Pour répéter ce test :
 5. lancer la capture puis vérifier JSON/manifeste ;
 6. confirmer que le manifeste porte toujours `visible-dom-only` et `partial`.
 
-## Limitation V0.1 bloquante pour un historique de deux ans
+## Collecte automatique V0.3 — qualification obligatoire
 
-Le scroll rétroactif, l’ouverture des fils et les sélecteurs Teams ne sont pas encore qualifiés. Ne pas utiliser V0.1 pour une collecte longue : elle sert uniquement au **spike de compatibilité** et à valider le circuit local de capture/export.
+La V0.3 peut remonter le fil sans action manuelle après le clic de départ. Elle reste une collecte du DOM rendu, non un export Microsoft officiel.
+
+1. Utiliser une conversation de test autorisée avec des messages fictifs couvrant plusieurs dates.
+2. Recharger l’extension et l’onglet Teams, ouvrir **une seule** conversation cible et ne plus la manipuler pendant le parcours.
+3. Cocher l’autorisation, renseigner la date **Du** connue comme atteignable, puis choisir éventuellement la persistance locale explicite.
+4. Cliquer **Collecter l’historique automatiquement** ; le popup peut être fermé, mais l’onglet Teams, Chrome et le poste doivent rester actifs.
+5. Vérifier le statut : nombre de messages, nombre de lots, borne la plus ancienne observée et motif d’arrêt.
+6. Exporter JSON/manifeste et vérifier `historyCollection.reason`, `cycles`, `earliestObserved`, `outOfPeriodCount`, `visible-dom-only` et le statut de couverture `partial`.
+7. Répéter une fois avec **Arrêter la collecte historique** et une fois en changeant volontairement de conversation : l’extension doit préserver le lot courant puis s’arrêter avec un motif explicite.
+8. Dans DevTools Network, confirmer qu’aucune requête réseau n’est initiée par l’extension. Enfin, effacer la session locale et vérifier sa disparition après réouverture du popup.
+
+Le comportement, les conditions d’arrêt, les données conservées et les limites sont décrits dans [AUTOMATED-HISTORY-COLLECTION.md](AUTOMATED-HISTORY-COLLECTION.md).
+
+## Limites V0.3 pour les corpus longs
+
+Ne pas présenter le résultat comme complet. L’historique dépend de ce que Teams rend pour le compte connecté, des droits, de la rétention, de la session, du réseau, de la virtualisation et du DOM courant. Les fils et réponses fermés ne sont pas ouverts automatiquement. Un rechargement/fermeture de l’onglet interrompt la boucle ; la persistance locale ne la reprend pas d’elle-même afin d’éviter toute action non sollicitée dans une nouvelle conversation.
 
 ## Éléments à rapporter après le test
 

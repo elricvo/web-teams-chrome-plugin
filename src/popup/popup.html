@@ -5,19 +5,22 @@
 </head>
 <body>
   <main>
-    <p class="eyebrow">V0.2 · capture visible contrôlée</p>
+    <p class="eyebrow">V0.3 · collecte locale progressive</p>
     <h1>Archive Teams locale</h1>
     <p class="warning">Ne pas utiliser comme export officiel ou preuve d’exhaustivité. Seul le contenu rendu et accessible dans l’onglet Teams actif peut être capturé.</p>
     <label><input id="authorize" type="checkbox"> Je confirme être autorisé à archiver ce canal.</label>
     <label><input id="persist" type="checkbox"> Conserver volontairement la session dans le stockage local de l’extension.</label>
     <div class="dates"><label>Du <input id="from" type="date"></label><label>Au <input id="to" type="date"></label></div>
+    <label>Plafond de lots <input id="max-cycles" type="number" min="1" max="1000" value="500"></label>
     <button id="capture" type="button">Capturer les éléments actuellement rendus</button>
+    <button id="collect-history" type="button">Collecter l’historique automatiquement</button>
+    <button id="stop-history" class="secondary" type="button" disabled>Arrêter la collecte historique</button>
     <button id="export" type="button" disabled>Exporter JSON + manifeste</button>
     <button id="export-markdown" type="button" disabled>Exporter Markdown lisible</button>
     <button id="download-images" type="button" disabled>Télécharger les images rendues</button>
     <button id="erase" class="secondary" type="button">Effacer la session locale</button>
     <p id="status" role="status">Ouvre le canal Teams Web cible puis confirme l’autorisation.</p>
-    <details><summary>Limites V0.2</summary><ul><li>Pas de scroll automatique ni d’ouverture de fils : le spike Teams DOM reste à valider.</li><li>Pas de téléchargement de pièces jointes ni de vidéos.</li><li>Les images ne sont téléchargées qu’après un clic explicite, depuis les URL HTTP(S) déjà rendues ; un lien expiré ou protégé peut échouer.</li></ul></details>
+    <details><summary>Limites V0.3</summary><ul><li>Une date « Du » est obligatoire pour la collecte automatique ; Teams doit rester ouvert et le poste éveillé.</li><li>Le scroll s’arrête à la borne observée, au haut stable, au plafond, sur arrêt utilisateur ou dès que la conversation devient ambiguë.</li><li>Les fils fermés, messages non rendus, vidéos et pièces jointes génériques ne sont pas récupérés.</li><li>Les images ne sont téléchargées qu’après un clic explicite, depuis les URL HTTP(S) déjà rendues ; un lien expiré ou protégé peut échouer.</li><li>Le manifeste conserve les compteurs, bornes observées et motifs d’arrêt ; la couverture reste partielle.</li></ul></details>
   </main>
   <script type="module" src="popup.js"></script>
 </body>

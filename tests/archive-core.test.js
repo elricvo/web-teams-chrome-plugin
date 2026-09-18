@@ -43,6 +43,15 @@ test('construit un manifeste qui expose les limites et les compteurs', () => {
   assert.equal(manifest.limitations.includes('thread-not-opened'), true);
 });
 
+test('conserve le protocole de collecte automatique dans le manifeste', () => {
+  const manifest = buildManifest({
+    channel: { channel: 'Conversation test' }, requestedPeriod: { from: '2026-06-18', to: '2026-09-18' },
+    messages: [{ id: 'm-1', createdAt: '2026-06-18T10:00:00Z' }],
+    history: { status: 'completed', reason: 'target-date-reached', cycles: 17, earliestObserved: '2026-06-17T23:59:00Z', latestObserved: '2026-09-18T10:00:00Z', outOfPeriodCount: 1 }, errors: ['automated-history-scroll']
+  });
+  assert.deepEqual(manifest.historyCollection, { status: 'completed', reason: 'target-date-reached', cycles: 17, earliestObserved: '2026-06-17T23:59:00Z', latestObserved: '2026-09-18T10:00:00Z', outOfPeriodCount: 1 });
+});
+
 test('transforme le HTML hostile en texte inerte', () => {
   assert.equal(toSafeText('<img src=x onerror=alert(1)>Bonjour&nbsp;<a href="javascript:evil()">monde</a>'), 'Bonjour monde');
 });

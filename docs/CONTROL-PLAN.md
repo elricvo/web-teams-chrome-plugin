@@ -36,7 +36,7 @@ Déterminer si l’extension est techniquement sûre, fonctionnelle pour le cont
 | Dédoublonnage | même identifiant, clé de repli, message modifié | une entrée canonique et journal de conflit |
 | Période | bornes inclusives, date absente, date invalide | inclusion correcte ; marquage, jamais décision silencieuse |
 | Modèle de fils | racine, réponse, réponse orpheline | rattachement exact ou avertissement |
-| Manifeste | session complète/incomplète | compteurs cohérents, limites et erreurs exposées |
+| Progression historique | borne date atteinte, haut stable, plafond, dédoublonnage inter-lots | arrêt motivé ; aucun doublon ; manifeste `historyCollection` cohérent |
 | Sanitation | script, URL dangereuse, HTML inattendu | aucun script exécuté et vue texte sûre |
 
 **Seuil :** 100 % des tests réussissent, sans warning Node.
@@ -57,7 +57,8 @@ Déterminer si l’extension est techniquement sûre, fonctionnelle pour le cont
 - [x] Comparaison locale MHTML/export : 10 corps de message rendus et 10 messages exportés, chacun avec identifiant unique, auteur et horodatage.
 - [x] Manifest : bornes observées cohérentes avec la période demandée ; avertissement `visible-dom-only` et couverture `partial` conservés.
 - [x] Le faux positif de rail de navigation observé au premier essai est empêché par un adaptateur Teams Free séparé.
-- [ ] Scroll rétroactif, virtualisation, fils/réponses et changement d’espace restent à qualifier.
+- [ ] Scroll rétroactif et virtualisation : moteur V0.3 implémenté ; qualification Chrome interactive à effectuer selon `docs/AUTOMATED-HISTORY-COLLECTION.md`.
+- [ ] Fils/réponses et changement d’espace restent à qualifier.
 
 **Preuve :** `docs/COMPATIBILITY.md` et artefacts de test conservés exclusivement dans le coffre local.
 
@@ -66,7 +67,7 @@ Déterminer si l’extension est techniquement sûre, fonctionnelle pour le cont
 - [ ] Chargement de l’extension non empaquetée sans erreur manifeste.
 - [ ] Le popup n’agit sur Teams qu’après clic utilisateur.
 - [ ] L’extension n’agit que dans l’onglet Teams sélectionné.
-- [ ] Pause, arrêt et changement de canal sont vérifiés.
+- [ ] La collecte automatique V0.3 s’arrête correctement sur borne, plafond, arrêt utilisateur et changement de canal.
 - [ ] L’export JSON, HTML et manifeste sont déclenchés explicitement.
 - [ ] Les fichiers exportés s’ouvrent hors ligne.
 - [ ] Le manifeste indique la période demandée/observée, compteurs, erreurs et limites.

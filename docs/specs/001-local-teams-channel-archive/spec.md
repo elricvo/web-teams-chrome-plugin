@@ -1,7 +1,7 @@
 # Spécification fonctionnelle — Archive locale d’un canal Teams Web
 
 **Fonctionnalité :** `001-local-teams-channel-archive`
-**Statut :** V0.1 partiellement implémentée ; capture visible Teams Free qualifiée le 2026-09-17
+**Statut :** V0.3 implémentée ; qualification Chrome interactive du scroll automatique à réaliser
 **Date :** 2026-09-17
 **Produit :** extension Chrome Manifest V3, locale
 
@@ -55,10 +55,10 @@ En tant qu’utilisateur, je veux démarrer une collecte contrôlée qui remonte
 **Critères d’acceptation :**
 
 - La collecte se limite à l’onglet Teams Web explicitement sélectionné.
-- L’utilisateur voit l’état : en attente, collecte, pause, arrêté, erreur, terminé.
+- L’utilisateur voit l’état : en attente, collecte, arrêté, erreur, terminé.
 - Le collecteur dédoublonne les messages et réponses par identifiant stable lorsque disponible ; sinon il consigne une clé de repli et un avertissement.
 - La collecte est limitée en cadence ; elle ne simule pas de contournement de rate limit ni de comportement furtif.
-- L’utilisateur peut mettre en pause ou arrêter immédiatement.
+- L’utilisateur peut arrêter immédiatement ; le lot déjà rendu est finalisé et la raison d’arrêt est consignée.
 - Les erreurs de rendu, fils non ouverts, éléments non chargés et bornes temporelles sont consignés dans le manifeste.
 
 ### US-3 — Collecter les fils de discussion disponibles
@@ -81,16 +81,16 @@ En tant qu’utilisateur, je veux indiquer une date de début et une date de fin
 - Le filtre de date n’efface pas les éléments collectés hors période : ils sont marqués « hors périmètre » puis exclus des vues exportées par défaut.
 - Une date absente ou non lisible est signalée, jamais silencieusement incluse comme certaine.
 
-### US-5 — Sauvegarder localement et reprendre volontairement
+### US-5 — Sauvegarder localement et exporter après un arrêt
 
-En tant qu’utilisateur, je veux pouvoir reprendre une collecte longue après fermeture du navigateur sans envoyer mes données ailleurs.
+En tant qu’utilisateur, je veux pouvoir conserver volontairement les lots déjà collectés après un arrêt ou une fermeture, puis les exporter, sans envoyer mes données ailleurs.
 
 **Critères d’acceptation :**
 
 - Avant toute persistance, l’extension affiche ce qui sera conservé : messages, métadonnées, paramètres et état de progression.
 - Le stockage `chrome.storage.local` est désactivé par défaut et exige une confirmation explicite.
+- Une fermeture ou un rechargement interrompt le scroll ; l’extension ne le reprend pas automatiquement dans une nouvelle session Teams.
 - Une commande « Effacer les données locales » supprime la session et confirme la suppression.
-- Sans persistance, les données ne survivent pas au rechargement ou à la fermeture de l’extension.
 
 ### US-6 — Exporter une archive et son manifeste
 

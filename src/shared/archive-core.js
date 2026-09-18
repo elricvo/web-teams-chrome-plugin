@@ -158,7 +158,7 @@ export function isInPeriod(value, from, to) {
  * @param {object} session État de session de collecte.
  * @returns {object} Manifeste exportable JSON.
  */
-export function buildManifest({ channel = {}, requestedPeriod = {}, messages = [], replies = [], errors = [] } = {}) {
+export function buildManifest({ channel = {}, requestedPeriod = {}, messages = [], replies = [], errors = [], history = null } = {}) {
   const timestamps = [...messages, ...replies].map((item) => item.createdAt).filter(Boolean).map(Date.parse).filter((value) => !Number.isNaN(value));
   const limitations = [...new Set(errors)];
   const requestedStart = requestedPeriod.from ?? null;
@@ -175,6 +175,7 @@ export function buildManifest({ channel = {}, requestedPeriod = {}, messages = [
     observedPeriod: { from: observedStart, to: observedEnd },
     counts: { messages: messages.length, replies: replies.length },
     limitations,
+    ...(history ? { historyCollection: { status: history.status || null, reason: history.reason || null, cycles: Number.isFinite(history.cycles) ? history.cycles : null, earliestObserved: history.earliestObserved || null, latestObserved: history.latestObserved || null, outOfPeriodCount: Number.isFinite(history.outOfPeriodCount) ? history.outOfPeriodCount : 0 } } : {}),
     coverage: { status: completeRange ? 'observed-range-only' : 'partial', statement: 'Archive locale de consultation ; exhaustivité non garantie.' }
   };
 }
