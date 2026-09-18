@@ -5,8 +5,9 @@
 
 ## Hôtes pris en charge
 
-- `teams.microsoft.com` et `teams.cloud.microsoft` : interface Teams Microsoft 365, adaptée à partir des wrappers `comfy-message-wrapper`.
-- `teams.live.com` : Teams Free personnel, adapté à partir des wrappers `message-wrapper`.
+- `teams.microsoft.com`, `teams.cloud.microsoft` et `teams.live.com` : conversations actuelles rendues avec `data-testid="message-wrapper"` contenant un corps `message-body-*`.
+
+La qualification du 18 septembre a montré que `teams.microsoft.com` peut afficher en parallèle des aperçus de barre latérale sous `comfy-message-wrapper` et la conversation ouverte sous `message-wrapper`. Le collecteur ne choisit donc plus un sélecteur sur le seul nom d’hôte : il ne conserve que les cartes possédant un corps `message-body-*`, ce qui exclut les aperçus.
 
 L’extension n’accepte pas les autres origines. Elle s’exécute seulement après un clic explicite de l’utilisateur dans l’onglet Teams actif, avec les permissions MV3 `activeTab`, `scripting`, `storage` et `downloads`.
 
@@ -23,7 +24,9 @@ Résultats vérifiés :
 - la période demandée et la plage observée sont cohérentes ;
 - le manifeste conserve l’avertissement `visible-dom-only` et l’état de couverture `partial`.
 
-Le premier essai avait exporté un unique élément de rail de navigation (`48:notes`). La cause était l’emploi du sélecteur Microsoft 365 dans Teams Free. Le correctif sélectionne désormais `data-testid="message-wrapper"` sur `teams.live.com` et utilise l’identifiant du corps de message, plutôt que l’identifiant visuel temporaire du menu.
+Le premier essai avait exporté un unique élément de rail de navigation (`48:notes`) sur Teams Free. La qualification complémentaire Microsoft 365 du 18 septembre a ensuite révélé le problème inverse : le sélecteur `comfy-message-wrapper` récupérait 27 aperçus de la barre latérale, dépourvus des métadonnées de conversation, puis le filtre de période les écartait tous. Le correctif V0.1.1 sélectionne désormais les cartes `message-wrapper` contenant `message-body-*`, extrait l’identifiant du corps et ignore les aperçus.
+
+Sur le MHTML privé fourni pour la conversation Microsoft 365, cette règle identifie **43 cartes de conversation**, toutes avec un `message-body-*` et un `time[datetime]` ISO. Cela qualifie le sélecteur et les métadonnées sur l’instantané ; la validation dans Chrome reste requise avant de conclure à une exportation réelle.
 
 ## Limites non levées
 

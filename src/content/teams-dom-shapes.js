@@ -1,7 +1,20 @@
 // Helpers sans dépendance, chargés avant le collecteur dans le contexte isolé Chrome.
 (() => {
-  /** Retourne le sélecteur de message approprié à l’interface Teams détectée. */
-  function messageSelector(hostname = '') { return hostname === 'teams.live.com' ? '[data-testid="message-wrapper"]' : '[data-testid="comfy-message-wrapper"]'; }
+  /**
+   * Retourne le sélecteur moderne des cartes de conversation. La même surface est
+   * aujourd’hui rendue par Teams Free et Teams Microsoft 365 ; le nom d’hôte seul
+   * ne suffit donc pas à distinguer la conversation active de la barre latérale.
+   */
+  function messageSelector(_hostname = '') { return '[data-testid="message-wrapper"]'; }
+
+  /**
+   * Ne retient que les cartes qui contiennent un vrai corps de message. Cette
+   * garde exclut les aperçus `comfy-message-wrapper` de la liste de conversations.
+   */
+  function messageNodes(root) {
+    if (!root?.querySelectorAll) return [];
+    return [...root.querySelectorAll(messageSelector())].filter((node) => Boolean(node.querySelector?.('[id^="message-body-"]')));
+  }
 
   /** Normalise uniquement les formats de date observés ; ne devine pas les dates relatives. */
   function normalizeTeamsTimestamp(value) {
@@ -24,5 +37,5 @@
     return id || null;
   }
 
-  globalThis.TeamsArchiveDom = { messageSelector, normalizeTeamsTimestamp, messageId };
+  globalThis.TeamsArchiveDom = { messageSelector, messageNodes, normalizeTeamsTimestamp, messageId };
 })();

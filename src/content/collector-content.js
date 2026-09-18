@@ -5,7 +5,10 @@
 
   function text(node) { return node?.textContent?.replace(/\s+/g, ' ').trim() || null; }
   const dom = globalThis.TeamsArchiveDom;
-  function candidateNodes() { return dom ? [...document.querySelectorAll(dom.messageSelector(window.location.hostname))] : []; }
+  // Les hôtes Microsoft 365 et Teams Free peuvent présenter simultanément une
+  // barre de prévisualisation et la conversation. Seule la présence d’un corps
+  // `message-body-*` qualifie un élément comme message de la conversation active.
+  function candidateNodes() { return dom?.messageNodes ? dom.messageNodes(document) : []; }
   function channelLabel() {
     const heading = document.querySelector('h1,[role="heading"][aria-level="1"],header [data-tid*="channel"]');
     return text(heading) || document.title || null;
@@ -21,7 +24,13 @@
       const replyToId = node.getAttribute('data-reply-to-id') || null;
       return { id, channelKey: label || 'unknown-channel', replyToId, author: text(authorNode), createdAt, html: node.innerHTML, domIndex: index };
     });
-    return { channel: label, records, warnings: [ 'visible-dom-only', ...(records.some((r) => !r.id) ? ['unstable-or-missing-message-id'] : []) ] };
+    const warnings = [
+      'visible-dom-only',
+      ...(records.length === 0 ? ['conversation-message-surface-not-found'] : []),
+      ...(records.some((r) => !r.id) ? ['unstable-or-missing-message-id'] : []),
+      ...(records.some((r) => !r.createdAt) ? ['missing-message-timestamp'] : [])
+    ];
+    return { channel: label, records, warnings };
   }
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type !== 'COLLECT_VISIBLE_TEAMS') return;

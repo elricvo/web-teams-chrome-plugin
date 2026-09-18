@@ -7,9 +7,9 @@
 
 ## État du projet
 
-**V0.1 — capture visible qualifiée sur Teams Free ; qualification Microsoft 365 à poursuivre.**
+**V0.1.1 — capture visible qualifiée sur Teams Free ; correctif Microsoft 365 basé sur un MHTML réel.**
 
-La V0.1 permet une capture locale des éléments **actuellement rendus** dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec export JSON et manifeste de couverture. Une qualification Teams Free du 17 septembre 2026 a confirmé l’export de 10 messages rendus sur 10 attendus, avec identifiants, auteurs et horodatages. Les détails et limites sont dans [la note de compatibilité](docs/COMPATIBILITY.md).
+La V0.1.1 permet une capture locale des éléments **actuellement rendus** dans un canal Teams Web actif ou une conversation personnelle Teams Free, avec export JSON et manifeste de couverture. Une qualification Teams Free du 17 septembre 2026 a confirmé l’export de 10 messages rendus sur 10 attendus. Le correctif du 18 septembre cible, y compris sur `teams.microsoft.com`, les vraies cartes de conversation `message-wrapper` avec un corps `message-body-*`, au lieu des aperçus de navigation `comfy-message-wrapper` qui provoquaient un export vide après filtrage de période. Les détails et limites sont dans [la note de compatibilité](docs/COMPATIBILITY.md).
 
 Elle ne réalise pas encore la remontée automatisée de deux ans d’historique ni l’ouverture systématique des fils ; ces fonctions restent à qualifier et implémenter.
 

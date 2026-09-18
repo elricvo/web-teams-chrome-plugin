@@ -15,9 +15,21 @@ test('cible les wrappers de message Teams Free, distincts de ceux de Teams profe
   assert.equal(messageSelector('teams.live.com'), '[data-testid="message-wrapper"]');
 });
 
-test('cible exactement les wrappers de message Teams professionnel et jamais le conteneur de liste', () => {
-  const { messageSelector } = loadDomShapeHelpers();
-  assert.equal(messageSelector('teams.microsoft.com'), '[data-testid="comfy-message-wrapper"]');
+test('privilégie les vrais messages de conversation rendus, indépendamment de l’hôte Teams', () => {
+  const { messageNodes } = loadDomShapeHelpers();
+  const bodyWrapper = { id: 'body', querySelector: (selector) => selector === '[id^="message-body-"]' ? { id: 'message-body-100' } : null };
+  const railPreview = { id: 'rail', querySelector: (selector) => selector === '[id^="message-body-"]' ? null : { id: 'message-preview-chat-list-item_abc' } };
+  const root = { querySelectorAll: (selector) => selector === '[data-testid="message-wrapper"]' ? [bodyWrapper, railPreview] : [] };
+  const selected = messageNodes(root);
+  assert.equal(selected.length, 1);
+  assert.equal(selected[0], bodyWrapper);
+});
+
+test('ne confond pas les aperçus de la barre latérale avec la conversation active', () => {
+  const { messageNodes } = loadDomShapeHelpers();
+  const railPreview = { querySelector: () => null };
+  const root = { querySelectorAll: () => [railPreview] };
+  assert.equal(messageNodes(root).length, 0);
 });
 
 test('convertit une date Teams française DD/MM/YYYY HH:mm sans inversion mois/jour', () => {

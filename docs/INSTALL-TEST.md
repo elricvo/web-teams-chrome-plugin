@@ -17,6 +17,18 @@
 5. Exporter le JSON/manifeste, puis vérifier localement les compteurs et limitations.
 6. Cliquer « Effacer la session locale », fermer/réouvrir le popup et vérifier l’absence de session.
 
+## Correctif V0.1.1 — conversations Microsoft 365
+
+Le correctif V0.1.1 traite le cas constaté dans une conversation ouverte sur `teams.microsoft.com` : Teams y affiche les messages actifs avec `message-wrapper` / `message-body-*`, tandis que les `comfy-message-wrapper` sont des aperçus de la barre latérale. L’ancienne version capturait ces aperçus sans date exploitable, puis le filtre de période produisait un export vide.
+
+Après mise à jour :
+
+1. dans `chrome://extensions`, cliquer sur l’icône **Recharger** de l’extension ;
+2. recharger complètement l’onglet Teams (`Ctrl+R`) ;
+3. ouvrir la conversation cible, rendre les messages voulus visibles, puis lancer la capture ;
+4. contrôler que `rawCaptureCount` et `counts.messages` sont non nuls avant de faire un traitement de corpus ;
+5. si le résultat est encore vide, exporter le manifeste et communiquer seulement ses compteurs/limitations, ainsi qu’une capture de l’état de l’extension — pas le contenu des messages.
+
 ## Test qualifié Teams Free personnel
 
 Le 2026-09-17, une conversation de test autorisée sur `teams.live.com` a été qualifiée après comparaison locale d’un MHTML avec l’export. Les 10 messages rendus ont été exportés une seule fois avec identifiants uniques, auteurs, horodatages et texte normalisé. Les artefacts restent dans le coffre local et ne doivent jamais être ajoutés à Git.
